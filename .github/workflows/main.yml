@@ -1,0 +1,43 @@
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:  
+  NODE_VERSION: '20.x'                # set this to the node version to use
+  NET_SDK_VERSION: '7.x'
+
+permissions:
+  contents: read
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: npm install, build, and test
+      run: |
+        pushd frontend/bookstore
+        npm install
+        npm run build --if-present
+        npm run test --if-present
+                    - name: Setup .NET Core SDK
+  build-backend:
+     runs-on: ubuntu-latest
+     steps:
+     - name: Setup .NET SDK 
+       uses: actions/setup-dotnet@v3.2.0     
+       with:
+         dotnet-version: ${{ env.NET_SDK_VERSION }}
+     - name: Build
+       run: |
+         pushd backend
+         dotnet build          
+      
