@@ -32,10 +32,13 @@ jobs:
   build-backend:
      runs-on: ubuntu-latest
      steps:
+     - uses: actions/checkout@v3
+     
      - name: Setup .NET SDK 
        uses: actions/setup-dotnet@v3.2.0     
        with:
          dotnet-version: ${{ env.NET_SDK_VERSION }}
+         
      - name: Build
        working-directory: ${{ github.workspace }}/backend
        run: |         
