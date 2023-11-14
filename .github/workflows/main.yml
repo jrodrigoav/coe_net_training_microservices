@@ -24,7 +24,7 @@ jobs:
         cache: 'npm'
 
     - name: npm install, build, and test
-      working-directory: frontend/bookstore
+      working-directory: ${{ github.workspace }}/frontend/bookstore
       run: |        
         npm install
         npm run build --if-present
@@ -37,7 +37,7 @@ jobs:
        with:
          dotnet-version: ${{ env.NET_SDK_VERSION }}
      - name: Build
-       working-directory: backend
+       working-directory: ${{ github.workspace }}/backend
        run: |         
          dotnet build          
       
