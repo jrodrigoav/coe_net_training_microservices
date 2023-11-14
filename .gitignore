@@ -7,4 +7,5 @@ obj/
 node-modules/
 .vscode/
 .vs/
+.angular/
 package-lock.json
