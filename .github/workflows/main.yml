@@ -1,11 +1,11 @@
 on:
-  push:
-    branches: [ "main" ]
+  pull_request:
+    branches: [ "main", "develop" ]
   workflow_dispatch:
 
 env:  
   NODE_VERSION: '20.x'                # set this to the node version to use
-  NET_SDK_VERSION: '7.x'
+  NET_SDK_VERSION: '8.x'
 
 permissions:
   contents: read
