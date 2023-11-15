@@ -1,5 +1,5 @@
 ﻿using ClientsAPI.DTO;
-using ClientsAPI.Services;
+using ClientsAPI.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClientsAPI.Controllers
@@ -8,11 +8,11 @@ namespace ClientsAPI.Controllers
     [ApiController]
     public class ClientsController : ControllerBase
     {
-        private readonly ClientService _clientService;
+        private readonly IClientService _clientService;
 
-        public ClientsController(ClientService clientService)
+        public ClientsController(IClientService clientService)
         {
-            _clientService= clientService;
+            _clientService = clientService;
         }
 
         [HttpGet]
@@ -22,6 +22,27 @@ namespace ClientsAPI.Controllers
             var clients = await _clientService.ListAsync();
             //AWSXRayRecorder.Instance.EndSegment();
             return clients;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Client>> GetAsync(string id)
+        {
+            var result = await _clientService.GetAsync(id);
+            return result;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Client>> Create(Client client)
+        {
+            var result = await _clientService.CreateAsync(client);
+            return result;
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Client>> Update(string id, [FromBody] Client newClient)
+        {
+            var result = await _clientService.UpdateAsync(id, newClient);
+            return result;
         }
     }
 }
