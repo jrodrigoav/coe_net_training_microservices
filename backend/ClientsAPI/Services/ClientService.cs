@@ -7,22 +7,51 @@ namespace ClientsAPI.Services
     {
         public async Task<Client> CreateAsync(Client client)
         {
-            return await Task.FromResult(new Client());
+            try
+            {
+                return await Task.FromResult(new Client());
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public async Task<Client> GetAsync(string id)
         {
-            return await Task.FromResult(new Client());
+            try
+            {
+                return await Task.FromResult(new Client());
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public async Task<List<Client>> ListAsync()
         {
-            return await Task.FromResult(new List<Client>());
+            try
+            {
+                return await Task.FromResult(new List<Client>());
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public async Task<Client> UpdateAsync(string id, Client newClient)
         {
-            return await Task.FromResult(new Client());
+            try
+            {
+                return await Task.FromResult(new Client());
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }
