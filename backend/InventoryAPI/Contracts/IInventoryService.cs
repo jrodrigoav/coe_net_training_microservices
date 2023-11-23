@@ -7,7 +7,6 @@ namespace InventoryAPI.Contracts
         Task<Inventory> RegisterInventoryAsync(Inventory inventory);
         Task<Inventory> GetInventoryByIDAsync(Guid id);
         Task<List<Inventory>> GetAllAsync();
-
         Task<Inventory> UpdateAsync(Guid id, Inventory inventory);
     }
 }
