@@ -1,0 +1,18 @@
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-light h-100">
+    <div class="d-flex gap-2 align-items-center justify-content-md-center link-dark text-decoration-none fs-4">
+        <button type="button" class="navbar-toggler d-md-none" (click)="onToggle.next()">
+            <i class="bi bi-list"></i>
+        </button>
+        <i class="bi bi-book"></i>
+        <span>Bookstore</span>
+    </div>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item" *ngFor="let item of menuItems">
+            <a href="#" class="nav-link" [routerLink]="item.path" routerLinkActive="active">
+                <i [ngClass]="item.icon"></i>
+                {{ item.title }}
+            </a>
+        </li>
+    </ul>
+</div>

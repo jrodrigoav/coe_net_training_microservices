@@ -1,0 +1,35 @@
+.main-wrapper {
+    display: grid;
+    grid-template-columns: 100vw;
+    transition: all 0.5s;
+    grid-auto-rows: 100%;
+    min-height: 100vh;
+    max-width: 100vw;
+    position: relative;
+}
+
+.sidebar {
+    position: absolute;
+    transition: all 0.5s;
+    transform: translateX(-100%);
+}
+
+.main-wrapper.expanded .sidebar {
+    transform: translateX(0);
+}
+
+.router-content {
+    padding: 0.5rem;
+    max-width: 100%;
+}
+
+@media (min-width: 768px) {
+    .main-wrapper {
+        grid-template-columns: 15rem calc(100vw - 15rem);
+    }
+
+    .sidebar {
+        position: static;
+        transform: translateX(0);
+    }
+}
