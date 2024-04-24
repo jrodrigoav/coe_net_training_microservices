@@ -1,1 +1,0 @@
-helm upgrade --install --namespace development renting-api-development .

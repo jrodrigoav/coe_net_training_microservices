@@ -1,0 +1,10 @@
+{
+    "config": {
+        "api": {
+            "resourceApi": "http://localhost/api/resource/",
+            "inventoryApi": "http://localhost/api/inventory/",
+            "clientApi": "http://localhost/api/client/",
+            "rentingApi": "http://localhost/api/renting/"
+        }
+    }
+}

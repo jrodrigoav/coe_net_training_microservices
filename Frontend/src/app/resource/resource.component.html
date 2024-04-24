@@ -1,0 +1,112 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header d-flex flex-column gap-2 p-2">
+                        <div>
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#newModal" data-bs-backdrop="false"
+                            (click)="onNew()" class="btn btn-success m-b-xs">New +</button>
+                        </div>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th *ngFor="let column of tableColumns">{{ column }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of resources | async">
+                                    <td>{{row.id}}</td>
+                                    <td>{{row.name}}</td>
+                                    <td>{{row.author}}</td>
+                                    <td>{{row.type}}</td>
+                                    <td>{{row.dateOfPublication | date: undefined: '+0000'}}</td>
+                                    <td><button type="button" (click)="register(row.id)" data-backdrop="false"
+                                            class="btn btn-success">Register <i class="bi bi-pencil"></i></button></td>
+                                    <td><button type="button" data-bs-toggle="modal" data-bs-target="#newModal"
+                                            (click)="onUpdate(row)" data-backdrop="false" class="btn btn-info">Edit
+                                            <i class="bi bi-pencil"></i></button></td>
+                                    <td><button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                            (click)="onDelete(row.id)" data-backdrop="false"
+                                            class="btn btn-danger">Delete <i class="bi bi-x"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="newModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{titleModal}}</h4>
+            </div>
+            <div class="modal-body">
+                <form novalidate [formGroup]="formGroup">
+                    <div class="row gy-2">
+                        <div class="form-group col-xs-12">
+                            <label for="name">Name:</label>
+                            <input type="text" formControlName="name" class="form-control" placeholder="Name">
+                        </div>
+                        <div class="form-group col-xs-12" id="datepicker">
+                            <label for="dateOfPublication">Date Of Publication:</label>
+                            <input type="date" formControlName="dateOfPublication" class="form-control"/>
+                        </div>
+                        <div class="form-group col-xs-12">
+                            <label for="Author">Author:</label>
+                            <input type="text" formControlName="author" class="form-control" placeholder="Author">
+                        </div>
+                        <div class="form-group col-xs-12">
+                            <label for="Tags">Tags:</label>
+                            <input class="form-control" placeholder="Enter a tag" (keydown)="onTagInput($event)">
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="d-flex flex-wrap gap-2">
+                                <span *ngFor="let tag of tags.controls; let index = index" class="badge rounded-pill text-bg-primary">{{tag.value}}<i class="bi bi-x" role="button" (click)="removeTag(index)"></i></span>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12">
+                            <label for="Type">Type:</label>
+                            <input type="text" formControlName="type" class="form-control" placeholder="Type">
+                        </div>
+                        <div class="form-group col-xs-12">
+                            <label for="Description">Description:</label>
+                            <input type="text" formControlName="description" class="form-control"
+                                placeholder="Description">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="submitModal()" data-bs-dismiss="modal" [disabled]="formGroup.invalid">Ok</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="deleteModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete Resource</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <h5 class="text-center">Are you sure?</h5>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="deleteResource()" data-bs-dismiss="modal">Ok</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
