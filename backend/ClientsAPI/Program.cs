@@ -1,5 +1,5 @@
 using ClientsAPI.Models;
-using ClientsAPI.Services;
+using ClientsAPI.Services.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
     }
     // Database
     builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection(nameof(MongoDBSettings)));
-    builder.Services.AddScoped<ClientService>();
+    builder.Services.AddScoped<ClientsService>();
 }
 var app = builder.Build();
 {

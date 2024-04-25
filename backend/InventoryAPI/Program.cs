@@ -1,4 +1,3 @@
-using Core.Services;
 using InventoryAPI.Models;
 using InventoryAPI.Services;
 

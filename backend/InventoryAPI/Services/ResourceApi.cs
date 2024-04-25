@@ -1,6 +1,6 @@
 ﻿using InventoryAPI.Models;
 
-namespace Core.Services;
+namespace InventoryAPI.Services;
 
 public class ResourceApi(HttpClient httpClient)
 {
