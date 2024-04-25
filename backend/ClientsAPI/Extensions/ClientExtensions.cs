@@ -19,7 +19,7 @@ namespace ClientsAPI.Extensions
         {
             return new ClientResponse
             {
-                Id = client.Id!,
+                Id = client.Id,
                 FirstName = client.FirstName,
                 LastName = client.LastName
             };

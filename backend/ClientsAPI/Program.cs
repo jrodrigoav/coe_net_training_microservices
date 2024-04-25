@@ -1,5 +1,5 @@
-using ClientsAPI.Models;
 using ClientsAPI.Services.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -9,18 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
     }
-    // Database
-    builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection(nameof(MongoDBSettings)));
-    builder.Services.AddScoped<ClientsService>();
+    
+    builder.Services.AddDbContext<ClientsDbContext>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("MicroservicesDB")));
 }
 var app = builder.Build();
-{
-    // Configure the HTTP request pipeline.
+{    
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
         app.UseSwaggerUI();
     }
+    app.MapGet("/", () => "ClientsAPI");
+    app.MapGet("/lbhealth", () => "ClientsAPI");
     app.MapControllers();
 }
 app.Run();

@@ -1,22 +1,19 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ClientsAPI.Models.Data
 {
+    
     public class Client
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
+        public Guid Id { get; set; }
 
-        [StringLength(150)]
-        public string FirstName { get; init; } = null!;
+        [Required, StringLength(150)]
+        public string FirstName { get; set; } = null!;
 
-        [StringLength(150)]
-        public string LastName { get; init; } = null!;
+        [Required, StringLength(150)]
+        public string LastName { get; set; } = null!;
 
-        [EmailAddress]
-        public string Email { get; init; } = null!;
+        [Required, EmailAddress]
+        public string Email { get; set; } = null!;
     }
 }

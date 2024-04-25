@@ -5,12 +5,11 @@ using InventoryAPI.Models.DTO;
 
 namespace InventoryAPI.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
+[Route("api/inventory"),ApiController,Produces("application/json")]
 public class InventoryController(InventoryService inventoryService, ResourceApi resourceApi) : ControllerBase
 {
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Inventory>> GetById(string id)
+    [HttpGet("{itemId}")]
+    public async Task<ActionResult<Item>> GetById(Guid itemId)
     {
         var inventory = await inventoryService.Get(id);
         if (inventory == null)

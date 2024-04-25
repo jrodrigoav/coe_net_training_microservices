@@ -1,33 +1,33 @@
-﻿using InventoryAPI.Models;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+﻿using InventoryAPI.Models.Data;
+using InventoryAPI.Services.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventoryAPI.Services;
 
 public class InventoryService
 {
-    private readonly IMongoCollection<Inventory> _inventoryCollection;
+    private readonly InventoryDbContext _inventoryDbContext;
+    private readonly ResourceAPIClient _resourceAPIClient;
 
-    public InventoryService(IOptions<MongoDBSettings> mongoDBSettings)
+    public InventoryService(InventoryDbContext inventoryDbContext, ResourceAPIClient resourceAPIClient)
     {
-        var client = new MongoClient(mongoDBSettings.Value.ConnectionURI);
-        var database = client.GetDatabase(mongoDBSettings.Value.DatabaseName);
-        _inventoryCollection = database.GetCollection<Inventory>(mongoDBSettings.Value.CollectionName);
+        _inventoryDbContext = inventoryDbContext;
+        _resourceAPIClient = resourceAPIClient;
     }
 
-    public async Task<IEnumerable<Inventory>> GetAll() =>
-        await _inventoryCollection.Find(Builders<Inventory>.Filter.Empty).ToListAsync();
-
-    public async Task<Inventory?> Get(string id)
+    public Item[] GetItems()
     {
-        var filter = Builders<Inventory>.Filter.Eq("Id", id);
-        return await _inventoryCollection.Find(filter).FirstAsync();
+        return _inventoryDbContext.Items.AsNoTracking().ToArray();
     }
 
-    public async Task<Inventory> Create(Inventory inventory)
+    public Item? GetItemById(Guid itemId)
     {
-        await _inventoryCollection.InsertOneAsync(inventory);
-        return inventory;
+        return _inventoryDbContext.Items.FindAsync(x => x.Id == itemId);
+    }
+
+    public async Task<Item> Create(Inventory inventory)
+    {
+        
     }
 
     public async Task<bool> Update(string id, Inventory inventory)
