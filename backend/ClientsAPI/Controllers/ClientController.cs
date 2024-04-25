@@ -4,12 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClientsAPI.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
+[ApiController, Route("api/clients")]
 public class ClientController(ClientService clientService) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Client>>> GetAll()
+    public async Task<ActionResult<Client[]>> GetAll()
     {
         var clients = await clientService.GetAll();
         return Ok(clients);
