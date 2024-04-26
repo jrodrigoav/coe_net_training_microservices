@@ -1,4 +1,5 @@
-﻿using InventoryAPI.Models.Data;
+﻿using InventoryAPI.Models;
+using InventoryAPI.Models.Data;
 using InventoryAPI.Services.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,48 +16,44 @@ public class InventoryService
         _resourceAPIClient = resourceAPIClient;
     }
 
-    public Item[] GetItems()
+    public async Task<Item?> RegisterAsync(Item item)
     {
-        return _inventoryDbContext.Items.AsNoTracking().ToArray();
+        var resource = await _resourceAPIClient.GetByResourceIdAsync(item.ResourceId);
+        if (resource == null) return null;
+        var entity = _inventoryDbContext.Items.Add(item);
+        await _inventoryDbContext.SaveChangesAsync();
+        return entity.Entity;
     }
 
-    public Item? GetItemById(Guid itemId)
+    public Item[] ListResourceAvailability(Guid resourceId, bool available)
     {
-        return _inventoryDbContext.Items.FindAsync(x => x.Id == itemId);
+        var items = _inventoryDbContext.Items.Where(i => i.ResourceId == resourceId && i.Available == available).AsNoTracking().ToArray();
+        return items ?? [];
     }
 
-    public async Task<Item> Create(Inventory inventory)
+    public async Task<Item?> UpdateItemAvailabilityAsync(Guid itemId, bool available)
     {
-        
+        var item = _inventoryDbContext.Items.Find(itemId);
+        if (item == null) return null;
+        item.Available = available;
+        await _inventoryDbContext.SaveChangesAsync();
+        return item;
     }
 
-    public async Task<bool> Update(string id, Inventory inventory)
+    public async Task<Summary[]> GetSummaryAsync()
     {
-        var filter = Builders<Inventory>.Filter.Eq("Id", id);
-        var result = await _inventoryCollection.ReplaceOneAsync(filter, inventory);
-        return result.ModifiedCount > 0;
-    }
-
-    public async Task<bool> Delete(string id)
-    {
-        var filter = Builders<Inventory>.Filter.Eq("Id", id);
-        var result = await _inventoryCollection.DeleteOneAsync(filter);
-        return result.DeletedCount > 0;
-    }
-
-    public async Task<IEnumerable<Inventory>> GetByResourceId(string resourceId, bool available)
-    {
-        var resourceIdFilter = Builders<Inventory>.Filter.Eq("ResourceId", resourceId);
-        var availabilityFilter = Builders<Inventory>.Filter.Eq("Available", available);
-        var filter = Builders<Inventory>.Filter.And(resourceIdFilter, availabilityFilter);
-        return await _inventoryCollection.Find(filter).ToListAsync();
-    }
-
-    public async Task<long> GetCountByResourceId(string resourceId, bool available)
-    {
-        var resourceIdFilter = Builders<Inventory>.Filter.Eq("ResourceId", resourceId);
-        var availabilityFilter = Builders<Inventory>.Filter.Eq("Available", available);
-        var filter = Builders<Inventory>.Filter.And(resourceIdFilter, availabilityFilter);
-        return await _inventoryCollection.CountDocumentsAsync(filter);
+        var resources = await _resourceAPIClient.ListResourcesAsync();
+        var result = from items in _inventoryDbContext.Items
+                     join res in resources on items.ResourceId equals res.Id
+                     group items by new { items.ResourceId, res.Name } into g
+                     select new Summary
+                     {
+                         ResourceId = g.Key.ResourceId,
+                         ResourceName = g.Key.Name,
+                         AvailableCopies = g.Count(x => x.Available),
+                         UnavailableCopies = g.Count(x => !x.Available),
+                         TotalCopies = g.Count()
+                     };
+        return [.. result];
     }
 }

@@ -11,7 +11,7 @@ namespace ResourcesAPI.Controllers;
 [Route("api/resources"), ApiController]
 public class ResourcesController(ResourcesDbContext resourcesDbContext) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("list")]
     public ActionResult<ResourceResponse[]> GetResources()
     {
         var resources = resourcesDbContext.Resources.AsNoTracking();

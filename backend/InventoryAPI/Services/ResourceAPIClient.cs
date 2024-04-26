@@ -1,5 +1,4 @@
 ﻿using InventoryAPI.Models;
-using InventoryAPI.Models.Data;
 using Microsoft.Extensions.Options;
 
 namespace InventoryAPI.Services;
@@ -14,13 +13,13 @@ public class ResourceAPIClient
         _client.BaseAddress = optionsMonitor.CurrentValue.Url;
     }
 
-    public async Task<Resource[]> GetResourcesAsync()
+    public async Task<Resource[]> ListResourcesAsync()
     {
-        var items = await _client.GetFromJsonAsync<Resource[]>("");
+        var items = await _client.GetFromJsonAsync<Resource[]>("list");
         return items ?? Array.Empty<Resource>();
     }
 
-    public async Task<Resource?> Get(Guid resourceId)
+    public async Task<Resource?> GetByResourceIdAsync(Guid resourceId)
     {
         return await _client.GetFromJsonAsync<Resource>($"{resourceId}");
     }

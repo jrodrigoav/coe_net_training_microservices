@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InventoryAPI.Models.Data
+namespace InventoryAPI.Models
 {
     public class Resource
     {

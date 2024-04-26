@@ -1,4 +1,5 @@
-﻿using InventoryAPI.Models.Data;
+﻿using InventoryAPI.Models;
+using InventoryAPI.Models.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryAPI.Services.Data
@@ -13,7 +14,6 @@ namespace InventoryAPI.Services.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("inventory");
-            modelBuilder.Entity<Resource>().HasIndex(r => new { r.Name, r.Type } ).IsUnique();
         }
     }
 }

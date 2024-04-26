@@ -1,77 +1,39 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using InventoryAPI.Extensions;
 using InventoryAPI.Models;
 using InventoryAPI.Services;
-using InventoryAPI.Models.DTO;
+using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryAPI.Controllers;
 
-[Route("api/inventory"),ApiController,Produces("application/json")]
-public class InventoryController(InventoryService inventoryService, ResourceApi resourceApi) : ControllerBase
+[Route("api/inventory"), ApiController, Produces("application/json")]
+public class InventoryController(InventoryService inventoryService) : ControllerBase
 {
-    [HttpGet("{itemId}")]
-    public async Task<ActionResult<Item>> GetById(Guid itemId)
+    [HttpGet("register")]
+    public async Task<ActionResult<ItemResponse>> Register([FromBody] RegisterItemRequest registerItemRequest)
     {
-        var inventory = await inventoryService.Get(id);
-        if (inventory == null)
-        {
-            return NotFound();
-        }
-        return Ok(inventory);
+        var item = await inventoryService.RegisterAsync(registerItemRequest.ToItem());
+        if (item == null) return NotFound();
+        return Ok(item);
     }
 
-    [HttpGet("resource/{resourceId}")]
-    public async Task<ActionResult<IEnumerable<Inventory>>> GetResourceInventory(string resourceId, [FromQuery] bool available = true)
+    [HttpGet("list/{resourceId}")]
+    public ActionResult<ItemResponse[]> ListResourceAvailability(Guid resourceId, [FromQuery] bool available = true)
     {
-        var inventories = await inventoryService.GetByResourceId(resourceId, available);
-        return Ok(inventories);
+        var items = inventoryService.ListResourceAvailability(resourceId, available);
+        return Ok(items.Select(i => i.ToItemResponse()).ToArray());
+    }
+
+    [HttpPut("setAvailability")]
+    public async Task<ActionResult<ItemResponse[]>> UpdateItemAvailability([FromBody] UpdateItemRequest updateItemRequest)
+    {
+        var item = await inventoryService.UpdateItemAvailabilityAsync(updateItemRequest.ItemId, updateItemRequest.Available);
+        if (item == null) return NotFound();
+        return Ok(new { Message = "Updated successully" });
     }
 
     [HttpGet("summary")]
-    public async Task<ActionResult<IEnumerable<InventorySummary>>> GetSummary()
+    public async Task<ActionResult<Summary[]>> GetSummary()
     {
-        var resources = await resourceApi.GetAll();
-        if (resources == null)
-            return StatusCode(StatusCodes.Status500InternalServerError);
-
-        var populatedResources = resources.Select(async resource =>
-        {
-            var available = await inventoryService.GetCountByResourceId(resource.Id, true);
-            var unavailable = await inventoryService.GetCountByResourceId(resource.Id, false);
-            return new InventorySummary
-            {
-                ResourceId = resource.Id,
-                ResourceName = resource.Name,
-                AvailableCopies = available,
-                UnavailableCopies = unavailable,
-                TotalCopies = available + unavailable
-            };
-        }).Select(t => t.Result);
-
-        return Ok(populatedResources);
-    }
-
-    [HttpPost("register")]
-    public async Task<ActionResult<Inventory>> Register(Inventory inventory)
-    {
-        var resource = await resourceApi.Get(inventory.ResourceId);
-        if (resource == null)
-        {
-            return BadRequest($"Couldn't find resource by id {inventory.ResourceId}");
-        }
-        var createdInventory = await inventoryService.Create(inventory);
-        return CreatedAtAction(nameof(GetById), new { id = createdInventory.Id }, createdInventory);
-    }
-
-    [HttpPut("setAvailability/{id}")]
-    public async Task<ActionResult> SetAvailability(string id, UpdateAvailabilityDTO updateAvailabilityDto)
-    {
-        var inventory = await inventoryService.Get(id);
-        if (inventory == null)
-        {
-            return NotFound($"Couldn't find inventory by id {id}");
-        }
-        inventory.Available = updateAvailabilityDto.Available;
-        await inventoryService.Update(id, inventory);
-        return Ok(new { Message = "Updated successfully." });
+        return Ok(await inventoryService.GetSummaryAsync());
     }
 }
