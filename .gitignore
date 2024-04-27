@@ -6,3 +6,6 @@ node-modules/
 .angular/
 package-lock.json
 .env.*
+.terragrunt-cache/
+.terraform.lock.hcl
+
