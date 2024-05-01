@@ -1,103 +1,36 @@
-version: "3"
+# docker compose -f .\docker-compose.yaml --project-name microsvcs up --detach
+version: '3.8'
+volumes:
+  postgres-data:
+  pgadmin-data:
 
 networks:
-  local_net:
+  micro_net:
     driver: bridge
 
 services:
-  resources-api:
-    networks: [local_net]
-    build:
-      context: ./
-      dockerfile: ./ResourcesAPI/Dockerfile
-    expose:
-      - 5000:5000
+  pgAdmin4:
+    networks: [micro_net]
+    container_name: ms-pgadmin4
+    image: dpage/pgadmin4:8.5
+    ports:
+      - 8080:80
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
     depends_on:
-      - database
+      - microservicesdb
     environment:
-      ASPNETCORE_URLS: http://*:5000
-      MongoDB__ConnectionURI: mongodb://database:27017
-      MongoDB__DatabaseName: microservices
-      MongoDB__CollectionName: resource
-
-  inventory-api:
-    networks: [local_net]
-    build:
-      context: ./
-      dockerfile: ./InventoryAPI/Dockerfile
-    expose:
-      - 5001:5001
-    depends_on:
-      - resources-api
-      - database
-    environment:
-      ASPNETCORE_URLS: http://*:5001
-      MongoDB__ConnectionURI: mongodb://database:27017
-      MongoDB__DatabaseName: microservices
-      MongoDB__CollectionName: inventory
-      APIs__Resource: http://resources-api:5000/api/resource/
-
-  clients-api:
-    networks: [local_net]
-    build:
-      context: ./
-      dockerfile: ./ClientsAPI/Dockerfile
-    expose:
-      - 5003:5003
-    depends_on:
-      - database
-    environment:
-      ASPNETCORE_URLS: http://*:5003
-      MongoDB__ConnectionURI: mongodb://database:27017
-      MongoDB__DatabaseName: microservices
-      MongoDB__CollectionName: client
-
-  renting-api:
-    networks: [local_net]
-    build:
-      context: ./
-      dockerfile: ./RentingAPI/Dockerfile
-    expose:
-      - 5004:5004
-    depends_on:
-      - database
-      - resources-api
-      - inventory-api
-      - clients-api
-    environment:
-      ASPNETCORE_URLS: http://*:5004
-      MongoDB__ConnectionURI: mongodb://database:27017
-      MongoDB__DatabaseName: microservices
-      MongoDB__CollectionName: renting
-      APIs__Inventory: http://inventory-api:5001/api/inventory/
-      APIs__Client: http://clients-api:5003/api/client/
-      APIs__Resource: http://resources-api:5000/api/resource/
-
-  database:
-    networks: [local_net]
-    image: mongo
+      PGADMIN_DEFAULT_EMAIL: jesus.acedo@unosquare.com
+      PGADMIN_DEFAULT_PASSWORD: password
+  microservicesdb:
+    networks: [micro_net]
+    container_name: ms-postgres
+    image: postgres:16.2-alpine3.19
     restart: always
+    environment:
+      POSTGRES_PASSWORD: password.1
     ports:
-      - 27017:27017
+      - 5432:5432
     volumes:
-      - ./database:/data/db
-
-  proxy:
-    networks: [local_net]
-    image: nginx:stable-alpine
-    ports:
-      - 80:80
-    depends_on:
-      - resources-api
-      - inventory-api
-      - clients-api
-      - renting-api
-      - front-end
-    volumes:
-      - ./default.conf:/etc/nginx/conf.d/default.conf
-
-  front-end:
-    networks: [local_net]
-    build: ./Frontend
-    volumes:
-      - ./front-end-config.json:/usr/share/nginx/html/assets/json/config.json
+      - postgres-data:/var/lib/postgresql/data
+ 

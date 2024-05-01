@@ -25,7 +25,7 @@ inputs = {
     Environment = "sandbox"
     CreatedBy   = "jesus.acedo@unosquare.com"
   }
-  base_name = "jrav20240426"
+  base_name = "jrav20240428"
   vpc_cidr  = "10.0.0.0/18" #16384 IPs
   public_subnet_cidrs = [
     {

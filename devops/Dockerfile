@@ -1,7 +1,7 @@
 FROM alpine:3.19
 ARG PLATFORM=Linux_amd64
 WORKDIR /tmp/setup
-RUN apk add bash aws-cli curl jq k9s helm
+RUN apk add bash aws-cli curl jq k9s helm git
 RUN curl --silent -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 RUN curl --silent -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
 RUN echo "$(cat kubectl.sha256)  kubectl" | sha256sum -c

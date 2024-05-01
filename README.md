@@ -10,3 +10,5 @@
 [https://clientsapi.127.0.0.1.nip.io:7214]
 [https://clientsapi.127.0.0.1.nip.io]
 [https://clientsapi.localtest.me]
+
+aws eks update-kubeconfig --name jrav20240428
