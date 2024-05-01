@@ -10,6 +10,7 @@ namespace RentingAPI.Models.Data
         public Guid ClientId { get; set; }
         public DateTime RegistrationDate { get; set; }
         public DateTime ReturnDate { get; set; }
+        public bool Returned { get; set; }
         public Guid CopyId { get; set; }
     }
 }

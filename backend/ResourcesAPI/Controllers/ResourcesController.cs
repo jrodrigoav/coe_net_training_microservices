@@ -20,7 +20,7 @@ namespace ResourcesAPI.Controllers
         }
 
         [HttpGet("{resourceId}")]
-        public async Task<ActionResult<Resource>> GetById(Guid resourceId)
+        public async Task<ActionResult<Resource>> GetResourceById(Guid resourceId)
         {
             var r = await resourcesDbContext.Resources.FindAsync(resourceId);
             if (r == null) return NotFound();
@@ -33,7 +33,7 @@ namespace ResourcesAPI.Controllers
             var entity = resourcesDbContext.Add(createResourceRequest.ToResource());
             var rows = await resourcesDbContext.SaveChangesAsync();
             if (rows != 1) return BadRequest();
-            return CreatedAtAction(nameof(GetById), new { resourceId = entity.Entity.Id }, entity.Entity.ToResourceResponse());
+            return CreatedAtAction(nameof(GetResourceById), new { resourceId = entity.Entity.Id }, entity.Entity.ToResourceResponse());
         }
 
         [HttpPut]

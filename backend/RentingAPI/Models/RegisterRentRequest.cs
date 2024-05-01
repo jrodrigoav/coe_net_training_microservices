@@ -6,15 +6,23 @@
         public Guid ClientId { get; init; }
         public DateTime RegistrationDate { get; init; }
         public DateTime ReturnDate { get; init; }
+        public bool Returned { get; init; }
     }
     public class RegisterRentRequest : Rent
     {
 
     }
 
+    public class ReturnRent
+    {
+        public Guid Id { get; init; }
+        public DateTime ReturnDate { get; init; }
+    }
+
     public class RentResponse : Rent
     {        
         public Guid Id { get; init; }        
         public Guid CopyId { get; init; }
+        public string? ResourceName { get; set; }
     }
 }
