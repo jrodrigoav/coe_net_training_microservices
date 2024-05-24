@@ -11,4 +11,6 @@
 [https://clientsapi.127.0.0.1.nip.io]
 [https://clientsapi.localtest.me]
 
-aws eks update-kubeconfig --name jrav20240428
+
+## To Launch the started dependencies
+ docker compose -f .\docker-compose.yaml --project-name microsvcs up --detach  
