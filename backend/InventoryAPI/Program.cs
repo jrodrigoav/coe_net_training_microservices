@@ -5,6 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 {
+ 
+
+    builder.Services.AddDbContext<InventoryDbContext>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("MicroservicesDB")));
+
+    builder.Services.Configure<ResourceAPISettings>(builder.Configuration.GetSection(nameof(ResourceAPISettings)));
+
+    builder.Services.AddHttpClient<ResourceAPIClient>();
+
     builder.Services.AddControllers();
     if (builder.Environment.IsDevelopment())
     {
@@ -12,11 +20,9 @@ var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddSwaggerGen();
     }
 
-    builder.Services.AddDbContext<InventoryDbContext>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("MicroservicesDB")));
+    //builder.Services.AddTransient<InventoryService>();
+    builder.Services.AddScoped<InventoryService>();
 
-    builder.Services.Configure<ResourceAPISettings>(builder.Configuration.GetSection(nameof(ResourceAPISettings)));
-
-    builder.Services.AddHttpClient<ResourceAPIClient>();
 }
 var app = builder.Build();
 {

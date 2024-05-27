@@ -7,12 +7,20 @@ namespace InventoryAPI.Controllers
 {
 
     [Route("api/inventory"), ApiController, Produces("application/json")]
-    public class InventoryController(InventoryService inventoryService) : ControllerBase
+    //public class InventoryController(InventoryService inventoryService) : ControllerBase
+    public class InventoryController : ControllerBase
     {
+        private  InventoryService _inventoryService1;
+        public  InventoryController(InventoryService inventoryService)
+        { 
+            _inventoryService1=inventoryService;
+        }
+
+
         [HttpGet("register")]
         public async Task<ActionResult<ItemResponse>> Register([FromBody] RegisterItemRequest registerItemRequest)
         {
-            var item = await inventoryService.RegisterAsync(registerItemRequest.ToItem());
+            var item = await _inventoryService1.RegisterAsync(registerItemRequest.ToItem());
             if (item == null) return NotFound();
             return Ok(item);
         }
@@ -20,14 +28,14 @@ namespace InventoryAPI.Controllers
         [HttpGet("list/{resourceId}")]
         public ActionResult<ItemResponse[]> ListResourceAvailability(Guid resourceId, [FromQuery] bool available = true)
         {
-            var items = inventoryService.ListResourceAvailability(resourceId, available);
+            var items = _inventoryService1.ListResourceAvailability(resourceId, available);
             return Ok(items.Select(i => i.ToItemResponse()).ToArray());
         }
 
         [HttpPut("setAvailability")]
         public async Task<ActionResult<ItemResponse[]>> UpdateItemAvailability([FromBody] UpdateItemRequest updateItemRequest)
         {
-            var item = await inventoryService.UpdateItemAvailabilityAsync(updateItemRequest.ItemId, updateItemRequest.Available);
+            var item = await _inventoryService1.UpdateItemAvailabilityAsync(updateItemRequest.ItemId, updateItemRequest.Available);
             if (item == null) return NotFound();
             return Ok(new { Message = "Updated successully" });
         }
@@ -35,7 +43,7 @@ namespace InventoryAPI.Controllers
         [HttpGet("summary")]
         public async Task<ActionResult<Summary[]>> GetSummary()
         {
-            return Ok(await inventoryService.GetSummaryAsync());
+            return Ok(await _inventoryService1.GetSummaryAsync());
         }
     }
 }
