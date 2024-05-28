@@ -43,7 +43,7 @@ namespace InventoryAPI.Services
         public async Task<Summary[]> GetSummaryAsync()
         {
             var resources = await _resourceAPIClient.ListResourcesAsync();
-            var result = from items in _inventoryDbContext.Items
+            var result = from items in _inventoryDbContext.Items.ToListAsync<Item>().Result
                          join res in resources on items.ResourceId equals res.Id
                          group items by new { items.ResourceId, res.Name } into g
                          select new Summary

@@ -15,7 +15,7 @@ export class ResourceService {
   }
 
   getList() {
-    return this.httpClient.get<Resource[]>(this.baseUrl);
+    return this.httpClient.get<Resource[]>(this.baseUrl+"/list");
   }
 
   create(resource: Omit<Resource, 'id'>) {

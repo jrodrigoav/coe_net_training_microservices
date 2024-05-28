@@ -15,10 +15,10 @@ export class InventoryService {
   }
 
   getSummary() {
-    return this.httpClient.get<InventorySummary[]>(this.baseUrl + 'summary');
+    return this.httpClient.get<InventorySummary[]>(this.baseUrl + '/summary');
   }
 
   registerResource(id: string) {
-    return this.httpClient.post<Inventory>(this.baseUrl + 'register', { resourceId: id });
+    return this.httpClient.post<Inventory>(this.baseUrl + '/register', { resourceId: id });
   }
 }

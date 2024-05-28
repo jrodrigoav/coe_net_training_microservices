@@ -56,6 +56,7 @@ export class ResourceComponent {
 
   submitModal() {
     const resource = this.formGroup.value;
+    resource.dateOfPublication=new Date(resource.dateOfPublication).toISOString();
     if (this.id) {
       this.resourceService.update(this.id, resource).subscribe((_) => {
         this.resources = this.resourceService.getList();

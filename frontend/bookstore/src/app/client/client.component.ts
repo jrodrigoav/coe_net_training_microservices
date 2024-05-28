@@ -46,7 +46,7 @@ export class ClientComponent {
       this.loadedClients,
     ]).pipe(map(([searchText, data]) => {
       if (!searchText) return data;
-      return data.filter(d => d.name.toLowerCase().includes(searchText.toLowerCase()));
+      return data.filter(d => d.firstName.toLowerCase().includes(searchText.toLowerCase()));//TODO we may need to add lastName as well
     }));
 
     this.resources = resourceService.getList();
@@ -58,7 +58,8 @@ export class ClientComponent {
     });
 
     this.clientForm = new FormGroup({
-      name: new FormControl('', [Validators.required]),
+      firstName: new FormControl('', [Validators.required]),
+      lastName: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required])
     });
   }

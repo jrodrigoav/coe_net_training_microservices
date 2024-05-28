@@ -16,7 +16,7 @@ namespace InventoryAPI.Services
 
         public async Task<Resource[]> ListResourcesAsync()
         {
-            var items = await _client.GetFromJsonAsync<Resource[]>("list");
+            var items = await _client.GetFromJsonAsync<Resource[]>(_client.BaseAddress+ "/list");
             return items ?? Array.Empty<Resource>();
         }
 
