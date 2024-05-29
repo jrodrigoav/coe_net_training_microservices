@@ -11,9 +11,24 @@ var builder = WebApplication.CreateBuilder(args);
     }
     
     builder.Services.AddDbContext<ClientsDbContext>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("MicroservicesDB")));
+
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(
+            name: "AllowLocalhostCORSPolicy",
+            policy =>
+            {
+                policy.AllowAnyMethod();
+                policy.AllowAnyHeader();
+                policy.AllowAnyOrigin();
+                policy.DisallowCredentials();
+                policy.WithOrigins("https://localhost:7122", "https://localhost:4200", "http://localhost:4200", "https://localhost:5183", "http://localhost:5183");
+            });
+    });
 }
 var app = builder.Build();
-{    
+{
+    app.UseCors("AllowLocalhostCORSPolicy");
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();

@@ -18,7 +18,7 @@ import { ClientRenting } from './client-renting';
   styleUrl: './client.component.css'
 })
 export class ClientComponent {
-  tableColumns = ['ID', 'Name', 'Email'];
+  tableColumns = ['ID', 'First Name','Last Name', 'Email'];
   loadedClients: Subject<Client[]> = new Subject();
   tableRows: Observable<Client[]>;
   searchString?: string;

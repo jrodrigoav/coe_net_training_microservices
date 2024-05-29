@@ -11,6 +11,21 @@ namespace RentingAPI.Controllers
     [Route("api/renting"), ApiController]
     public class RentingController : ControllerBase
     {
+        private readonly InventoryAPIClient _inventoryAPIClient;
+        private readonly RentingDbContext _rentingDbContext;
+
+        public RentingController(InventoryAPIClient inventoryAPIClient,  RentingDbContext rentingDbContext) { 
+            _inventoryAPIClient = inventoryAPIClient;
+            _rentingDbContext = rentingDbContext;
+        }
+
+        [HttpGet("{resourceId}")]
+        public ActionResult List()//[FromServices] RentingDbContext rentingDbContext)
+        {
+            var rents = _rentingDbContext.Rents.AsNoTracking();
+            return Ok(new { items = rents.Select(r => r.ToRentResponse()).ToArray(), count = rents.Count() });
+        }
+
 
         //[Route("api/resources"), ApiController]//I think this class def should not be here
         //public class ResourcesController : ControllerBase
@@ -37,29 +52,37 @@ namespace RentingAPI.Controllers
         //        return Ok(new { items = response.ToArray(), count = response.Count() });
         //    }
 
-        //    [HttpPost("register")]
-        //    public async Task<ActionResult> Register([FromBody] RegisterRentRequest registerRentRequest, [FromServices] InventoryAPIClient inventoryAPIClient, [FromServices] RentingDbContext rentingDbContext)
-        //    {
-        //        var items = await inventoryAPIClient.ListResourceAvailabilityAsync(registerRentRequest.ResourceId);
-        //        if (items.Length <= 0) return Ok(new { Message = "The resource is not available." });
-        //        var rent = new Models.Data.Rent
-        //        {
-        //            CopyId = items[0].Id,
-        //            ResourceId = registerRentRequest.ResourceId,
-        //            ClientId = registerRentRequest.ClientId,
-        //            RegistrationDate = registerRentRequest.RegistrationDate,
-        //            ReturnDate = registerRentRequest.ReturnDate
-        //        };
-        //        rentingDbContext.Add(rent);
-        //        await rentingDbContext.SaveChangesAsync();
-        //        var updateItemRequest = new UpdateItemRequest
-        //        {
-        //            ItemId = rent.CopyId,
-        //            Available = false
-        //        };
-        //        await inventoryAPIClient.UpdateItemAvailabilityAsync(updateItemRequest);
-        //        return Ok(rent.ToRentResponse());
-        //    }
+        [HttpPost("register")]
+        public async Task<ActionResult> Register([FromBody] RegisterRentRequest registerRentRequest)//, [FromServices] InventoryAPIClient inventoryAPIClient, [FromServices] RentingDbContext rentingDbContext)
+        {
+            try
+            {//TODO  this will be fixed once we know what should happen when the register button is clicked
+                var items = await _inventoryAPIClient.ListResourceAvailabilityAsync(registerRentRequest.ResourceId);
+                if (items.Length <= 0) return Ok(new { Message = "The resource is not available." });
+                var rent = new Models.Data.Rent
+                {
+                    CopyId = items[0].Id,
+                    ResourceId = registerRentRequest.ResourceId,
+                    ClientId = registerRentRequest.ClientId,
+                    RegistrationDate = registerRentRequest.RegistrationDate,
+                    ReturnDate = registerRentRequest.ReturnDate
+                };
+                _rentingDbContext.Add(rent);
+                await _rentingDbContext.SaveChangesAsync();
+                var updateItemRequest = new UpdateItemRequest
+                {
+                    ItemId = rent.CopyId,
+                    Available = false
+                };
+                await _inventoryAPIClient.UpdateItemAvailabilityAsync(updateItemRequest);
+                return Ok(rent.ToRentResponse());
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message); 
+                return BadRequest(ex.Message);
+            }
+        }
 
         //    [HttpPut("return")]
         //    public async Task<ActionResult> Return([FromBody] ReturnRent returnRent, RentingDbContext rentingDbContext, [FromServices] InventoryAPIClient inventoryAPIClient)

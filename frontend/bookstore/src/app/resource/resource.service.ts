@@ -15,19 +15,19 @@ export class ResourceService {
   }
 
   getList() {
-    return this.httpClient.get<Resource[]>(this.baseUrl+"/list");
+    return this.httpClient.get<Resource[]>(`${this.baseUrl}/list`);
   }
 
   create(resource: Omit<Resource, 'id'>) {
-    return this.httpClient.post<Resource>(this.baseUrl, resource);
+    return this.httpClient.post<Resource>(`${this.baseUrl}/create`, resource);
   }
 
   update(id: string, resource: Omit<Resource, 'id'>) {
-    return this.httpClient.put<Resource>(this.baseUrl + id, { id, ...resource });
+    return this.httpClient.post<Resource>(`${this.baseUrl}/update`, { id, ...resource });
   }
 
   delete(id: string) {
-    return this.httpClient.delete(this.baseUrl + id, { observe: 'response' })
+    return this.httpClient.delete(`${this.baseUrl}/${id}`  , { observe: 'response' })
       .pipe(map(response => response.status >= 200 && response.status <= 299));
   }
 }

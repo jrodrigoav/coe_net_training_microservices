@@ -9,17 +9,20 @@ import { ConfigService } from '../services/config.service';
 })
 export class RentingService {
   private readonly baseUrl: string;
+  private readonly resourceApiUrl: string;
+
 
   constructor(private httpClient: HttpClient, configService: ConfigService) {
     this.baseUrl = configService.api.rentingApi;
+    this.resourceApiUrl = configService.api.resourceApi;
   }
 
   listByClientId(id: string) {
-    return this.httpClient.get<ClientRenting[]>(this.baseUrl + `client/${id}`);
+    return this.httpClient.get<ClientRenting[]>(`${this.resourceApiUrl}/${id}`);//TODO check if this is correct
   }
 
   register(data: Renting) {
-    return this.httpClient.post<Omit<Renting, 'id'>>(this.baseUrl + 'register/', data);
+    return this.httpClient.post<Omit<Renting, 'id'>>(`${this.baseUrl}/register`, data);
   }
 
   returnResource(id: string, returnDate: Date | string) {

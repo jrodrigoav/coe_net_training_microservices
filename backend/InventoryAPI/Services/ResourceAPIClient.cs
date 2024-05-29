@@ -22,7 +22,7 @@ namespace InventoryAPI.Services
 
         public async Task<Resource?> GetByResourceIdAsync(Guid resourceId)
         {
-            return await _client.GetFromJsonAsync<Resource>($"{resourceId}");
+            return await _client.GetFromJsonAsync<Resource>($"{_client.BaseAddress}/{resourceId}");
         }
     }
 }

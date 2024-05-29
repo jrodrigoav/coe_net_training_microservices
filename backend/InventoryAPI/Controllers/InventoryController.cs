@@ -17,7 +17,7 @@ namespace InventoryAPI.Controllers
         }
 
 
-        [HttpGet("register")]
+        [HttpPost("register")]
         public async Task<ActionResult<ItemResponse>> Register([FromBody] RegisterItemRequest registerItemRequest)
         {
             var item = await _inventoryService1.RegisterAsync(registerItemRequest.ToItem());
