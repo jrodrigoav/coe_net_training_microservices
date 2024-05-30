@@ -23,7 +23,7 @@ export class ClientService {
   }
 
   update(id: string, data: Omit<Client, 'id'>) {
-    return this.httpClient.put<Client>(this.baseUrl + id, { ...data, id });
+    return this.httpClient.put<Client>(this.baseUrl , { ...data, id });
   }
 
   delete(id: string) {

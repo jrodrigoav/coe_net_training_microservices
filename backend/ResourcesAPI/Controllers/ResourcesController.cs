@@ -27,7 +27,7 @@ namespace ResourcesAPI.Controllers
             return Ok(r.ToResourceResponse());
         }
 
-        [HttpPost]
+        [HttpPost("create"), HttpOptions]
         public async Task<ActionResult<ResourceResponse>> Create(CreateResourceRequest createResourceRequest)
         {
             var entity = resourcesDbContext.Add(createResourceRequest.ToResource());
@@ -36,7 +36,8 @@ namespace ResourcesAPI.Controllers
             return CreatedAtAction(nameof(GetResourceById), new { resourceId = entity.Entity.Id }, entity.Entity.ToResourceResponse());
         }
 
-        [HttpPut]
+        //        [HttpPut, HttpOptions]
+        [HttpPost("update"), HttpOptions]
         public async Task<ActionResult<ResourceResponse>> Update(UpdateResourceRequest updateResourceRequest)
         {
             var r = await resourcesDbContext.Resources.FindAsync(updateResourceRequest.Id);

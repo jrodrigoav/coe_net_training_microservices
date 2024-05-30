@@ -21,7 +21,8 @@ namespace ClientsAPI.Extensions
             {
                 Id = client.Id,
                 FirstName = client.FirstName,
-                LastName = client.LastName
+                LastName = client.LastName,
+                Email = client.Email
             };
         }
     }
