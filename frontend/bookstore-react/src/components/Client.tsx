@@ -1,4 +1,6 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
+import { Button, Input, Table, Modal, Form, Select } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useClientContext } from '../contexts/ClientContext';
 import { useResourceContext } from '../contexts/ResourceContext';
 import { useRentingContext } from '../contexts/RentingContext';
@@ -15,10 +17,13 @@ const ClientComponent: React.FC = () => {
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
   const [clientForm, setClientForm] = useState<Client>({ id: '', firstName: '', lastName: '', email: '' });
   const [rentingForm, setRentingForm] = useState<{ resourceId: string, clientId: string, registrationDate: string }>({ resourceId: '', clientId: '', registrationDate: new Date().toISOString().substring(0, 10) });
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>('');
   const [clientId, setClientId] = useState<string>('');
   const [rentingList, setRentingList] = useState<ClientRenting[]>([]);
   const [returnDate, setReturnDate] = useState<string>('');
+  const [isRentingModalVisible, setIsRentingModalVisible] = useState<boolean>(false);
+  const [isReturnModalVisible, setIsReturnModalVisible] = useState<boolean>(false);
 
   useEffect(() => {
     getClients();
@@ -47,26 +52,31 @@ const ClientComponent: React.FC = () => {
       await createClient(clientForm);
     }
     getClients();
+    setModalVisible(false);
   };
 
   const submitRentingModal = async () => {
     await registerRenting(rentingForm);
+    setIsRentingModalVisible(false);
   };
 
   const onNew = () => {
     setModalTitle("New Client");
     setClientId('');
     setClientForm({ id: '', firstName: '', lastName: '', email: '' });
+    setModalVisible(true);
   };
 
   const onUpdate = (client: Client) => {
     setModalTitle("Update Client");
     setClientId(client.id);
     setClientForm(client);
+    setModalVisible(true);
   };
 
   const onRenting = async (id: string) => {
     setClientId(id);
+    setIsRentingModalVisible(true);
     const availableResources = await resources;
     if (availableResources.length > 0) {
       setRentingForm({ resourceId: availableResources[0].id, clientId: id, registrationDate: new Date().toISOString().substring(0, 10) });
@@ -77,198 +87,149 @@ const ClientComponent: React.FC = () => {
     setClientId(id);
     const rentings = await listRentingsByClientId(id);
     setRentingList(rentings);
+    setIsReturnModalVisible(true);
   };
 
   const handleReturnResource = async () => {
     if (clientId && returnDate) {
       await returnRentingResource(clientId, returnDate);
       setReturnDate('');
+      setIsReturnModalVisible(false);
     }
   };
 
   return (
     <div className="main-content">
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-md-12">
-            <div className="card">
-              <div className="header d-flex flex-column gap-2 p-2">
-                <button type="button" data-bs-toggle="modal" data-bs-target="#newModal" data-bs-backdrop="false" onClick={onNew} className="btn btn-success">New +</button>
-                <div className="form-group">
-                  <div className="input-group padding-top">
-                    <div className="input-group-text">
-                      <i className="bi bi-search"></i>
-                    </div>
-                    <input type="text" className="form-control" name="searchString" placeholder="Type to search..." value={searchString} onChange={handleSearch} />
-                  </div>
-                </div>
-              </div>
-              <div className="content table-responsive table-full-width">
-                <table className="table table-hover table-striped">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>Email</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredClients.map((client) => (
-                      <tr key={client.id}>
-                        <td>{client.id}</td>
-                        <td>{client.firstName}</td>
-                        <td>{client.lastName}</td>
-                        <td>{client.email}</td>
-                        <td>
-                          <button type="button" data-bs-toggle="modal" data-bs-target="#newModal" onClick={() => onUpdate(client)} data-bs-backdrop="false" className="btn btn-info">Edit <i className="bi bi-pencil"></i></button>
-                          <button type="button" data-bs-toggle="modal" data-bs-target="#rentingModal" onClick={() => onRenting(client.id)} data-bs-backdrop="false" className="btn btn-secondary">Renting <i className="bi bi-file-earmark-font"></i></button>
-                          <button type="button" data-bs-toggle="modal" data-bs-target="#returnModal" onClick={() => onReturn(client.id)} data-bs-backdrop="false" className="btn btn-warning">Return <i className="bi bi-arrow-counterclockwise"></i></button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+      <Button type="primary" icon={<PlusOutlined />} onClick={onNew} style={{ marginBottom: '20px' }}>
+        New
+      </Button>
+      <Input
+        placeholder="Type to search..."
+        value={searchString}
+        onChange={handleSearch}
+        style={{ marginBottom: '20px' }}
+      />
+      <Table dataSource={filteredClients} rowKey="id">
+        <Table.Column title="ID" dataIndex="id" key="id" />
+        <Table.Column title="First Name" dataIndex="firstName" key="firstName" />
+        <Table.Column title="Last Name" dataIndex="lastName" key="lastName" />
+        <Table.Column title="Email" dataIndex="email" key="email" />
+        <Table.Column
+          title="Actions"
+          key="actions"
+          render={(record: Client) => (
+            <div className="flex gap-2">
+              <Button icon={<EditOutlined />} onClick={() => onUpdate(record)}>
+                Edit
+              </Button>
+              <Button icon={<PlusOutlined />} onClick={() => onRenting(record.id)}>
+                Renting
+              </Button>
+              <Button icon={<DeleteOutlined />} onClick={() => onReturn(record.id)}>
+                Return
+              </Button>
             </div>
-          </div>
-        </div>
-      </div>
+          )}
+        />
+      </Table>
 
-      {/* New Client Modal */}
-      <div className="modal" id="newModal">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h4 className="modal-title">{modalTitle}</h4>
-            </div>
-            <div className="modal-body">
-              <form>
-                <div className="row gy-2">
-                  <div className="form-group col-xs-12">
-                    <label htmlFor="firstName">First Name:</label>
-                    <input type="text" name="firstName" className="form-control" placeholder="Name" value={clientForm.firstName} onChange={handleClientFormChange} />
-                  </div>
-                  <div className="form-group col-xs-12">
-                    <label htmlFor="lastName">Last Name:</label>
-                    <input type="text" name="lastName" className="form-control" placeholder="Last Name" value={clientForm.lastName} onChange={handleClientFormChange} />
-                  </div>
-                  <div className="form-group col-xs-12">
-                    <label htmlFor="email">Email:</label>
-                    <input type="email" name="email" className="form-control" placeholder="Email" value={clientForm.email} onChange={handleClientFormChange} />
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-primary" onClick={submitClientModal} data-bs-dismiss="modal">Ok</button>
-              <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Modal
+        title={modalTitle}
+        visible={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        footer={[
+          <Button key="cancel" onClick={() => setModalVisible(false)}>Cancel</Button>,
+          <Button key="submit" type="primary" onClick={submitClientModal}>Ok</Button>,
+        ]}
+      >
+        <Form layout="vertical">
+          <Form.Item label="First Name">
+            <Input
+              name="firstName"
+              value={clientForm.firstName}
+              onChange={handleClientFormChange}
+            />
+          </Form.Item>
+          <Form.Item label="Last Name">
+            <Input
+              name="lastName"
+              value={clientForm.lastName}
+              onChange={handleClientFormChange}
+            />
+          </Form.Item>
+          <Form.Item label="Email">
+            <Input
+              name="email"
+              value={clientForm.email}
+              onChange={handleClientFormChange}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
 
-      {/* Renting Modal */}
-      <div className="modal" id="rentingModal">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h4 className="modal-title">Register Renting</h4>
-            </div>
-            <div className="modal-body">
-              <form>
-                <div className="row gy-2">
-                  <div className="form-group col-xs-12">
-                    <label htmlFor="resourceId">Resource:</label>
-                    <select className="form-control" name="resourceId" value={rentingForm.resourceId} onChange={handleRentingFormChange}>
-                      {resources.map((resource: Resource) => (
-                        <option key={resource.id} value={resource.id}>{resource.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="form-group col-xs-12">
-                    <label htmlFor="registrationDate">Date:</label>
-                    <input type="date" name="registrationDate" className="form-control" value={rentingForm.registrationDate} onChange={handleRentingFormChange} />
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-primary" onClick={submitRentingModal} data-bs-dismiss="modal">Ok</button>
-              <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Modal
+        title="Register Renting"
+        visible={isRentingModalVisible}
+        onCancel={() => setIsRentingModalVisible(false)}
+        footer={[
+          <Button key="cancel" onClick={() => setIsRentingModalVisible(false)}>Cancel</Button>,
+          <Button key="submit" type="primary" onClick={submitRentingModal}>Ok</Button>,
+        ]}
+      >
+        <Form layout="vertical">
+          <Form.Item label="Resource">
+            <Select
+              value={rentingForm.resourceId}
+              onChange={(value) => setRentingForm({ ...rentingForm, resourceId: value })}
+            >
+              {resources.map((resource: Resource) => (
+                <Select.Option key={resource.id} value={resource.id}>{resource.name}</Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item label="Date">
+            <Input
+              type="date"
+              name="registrationDate"
+              value={rentingForm.registrationDate}
+              onChange={handleRentingFormChange}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
 
-      {/* Return Modal */}
-      <div className="modal fade" id="returnModal">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h4 className="modal-title">Return</h4>
-            </div>
-            <div className="modal-body">
-              <div className="row gy-2">
-                <div className="col-md-12">
-                  <div className="card">
-                    <div className="content table-responsive table-full-width">
-                      <table className="table table-hover table-striped">
-                        <thead>
-                          <tr>
-                            <th>Resource</th>
-                            <th>Registration Date</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {rentingList.map((renting) => (
-                            <tr key={renting.id}>
-                              <td>{renting.resourceName}</td>
-                              <td>{new Date(renting.registrationDate).toLocaleDateString()}</td>
-                              <td>
-                                <button type="button" data-bs-toggle="modal" data-bs-target="#dateModal" onClick={() => setClientId(renting.id)} data-bs-backdrop="false" className="btn btn-info" data-bs-dismiss="modal">
-                                  Return <i className="bi bi-arrow-counterclockwise"></i>
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Date Modal */}
-      <div className="modal fade" id="dateModal">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h4 className="modal-title">Select Return Date</h4>
-            </div>
-            <div className="modal-body">
-              <div className="row gy-2">
-                <div className="form-group col-xs-12">
-                  <label>Date:</label>
-                  <input type="date" className="form-control" value={returnDate} onChange={(e) => setReturnDate(e.target.value)} />
-                </div>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-primary" onClick={handleReturnResource} data-bs-dismiss="modal" disabled={!returnDate}>Ok</button>
-              <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Modal
+        title="Return"
+        visible={isReturnModalVisible}
+        onCancel={() => setIsReturnModalVisible(false)}
+        footer={[
+          <Button key="cancel" onClick={() => setIsReturnModalVisible(false)}>Cancel</Button>,
+          <Button key="submit" type="primary" onClick={handleReturnResource}>Ok</Button>,
+        ]}
+      >
+        <Table dataSource={rentingList} rowKey="id">
+          <Table.Column title="Resource" dataIndex="resourceName" key="resourceName" />
+          <Table.Column title="Registration Date" dataIndex="registrationDate" key="registrationDate" render={(date: string) => new Date(date).toLocaleDateString()} />
+          <Table.Column
+            title="Return"
+            key="return"
+            render={(record: ClientRenting) => (
+              <Button type="link" onClick={() => setClientId(record.id)}>
+                Return
+              </Button>
+            )}
+          />
+        </Table>
+        <Form layout="vertical">
+          <Form.Item label="Return Date">
+            <Input
+              type="date"
+              value={returnDate}
+              onChange={(e) => setReturnDate(e.target.value)}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };
