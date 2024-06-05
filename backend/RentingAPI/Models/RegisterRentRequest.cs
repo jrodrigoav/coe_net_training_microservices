@@ -7,6 +7,8 @@
         public DateTime RegistrationDate { get; init; }
         public DateTime ReturnDate { get; init; }
         public bool Returned { get; init; }
+
+        public string ResourceName { get; init; }
     }
     public class RegisterRentRequest : Rent
     {

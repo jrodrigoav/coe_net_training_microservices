@@ -90,9 +90,20 @@ export class ClientComponent {
 
     if(!this.date) return;
 
-    this.rentingService.returnResource(this.id, this.date).subscribe(() => {
-      // Handle update
-    });
+     this.rentingService.returnResource(this.id, this.date).subscribe(() => {
+       // Handle update
+     });
+  }
+
+  returnSpecificResource() {
+    console.error(this.id, this.date);
+    if(!this.id) return;
+
+    if(!this.date) return;
+
+     this.rentingService.returnSpecificResource(this.id, this.date).subscribe(() => {
+       // Handle update
+     });
   }
 
   deleteClient() {
@@ -135,8 +146,9 @@ export class ClientComponent {
     this.rentingList = this.rentingService.listByClientId(id);
   }
 
-  onReturnDate(id: string) {
+  onReturnDate(id: string,returnDate: Date|undefined) {
     this.id = id;
     this.date = undefined;
+    this.rentingService.returnSpecificResource(id,returnDate);
   }
 }
