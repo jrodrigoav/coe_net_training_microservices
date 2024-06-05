@@ -3,8 +3,8 @@ import AdminLayoutRoutes from './admin-layout.routes';
 
 const AppRouter = () => (
     <Routes>
-        <Route path="/" element={<Navigate to="/admin" />} />
-        <Route path="/admin/*" element={<AdminLayoutRoutes />} />
+        <Route path="/" element={<Navigate to="clients" />} />
+        <Route path="/*" element={<AdminLayoutRoutes />} />
     </Routes>
 );
 
