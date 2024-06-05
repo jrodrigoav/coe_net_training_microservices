@@ -22,7 +22,7 @@ const Navbar = () => {
         <button type="button" className="navbar-toggler d-md-none" onClick={toggleNavbar}>
           <i className="bi bi-list"></i>
         </button>
-        <span className="navbar-brand">{title}</span>
+        <span className="navbar-brand" style={{ fontSize: '24px', marginLeft: '20px' }}>{title}</span>
       </div>
     </nav>
   );
