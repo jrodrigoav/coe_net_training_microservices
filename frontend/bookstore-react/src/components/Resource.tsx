@@ -150,7 +150,7 @@ const ResourceComponent: React.FC = () => {
 
       <Modal
         title={modalTitle}
-        visible={modalVisible}
+        open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={[
           <Button key="cancel" onClick={() => setModalVisible(false)}>Cancel</Button>,
