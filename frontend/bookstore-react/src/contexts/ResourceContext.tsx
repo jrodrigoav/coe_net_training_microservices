@@ -43,11 +43,13 @@ const ResourceContextProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const updateExistingResource = async (id: string, resource: Omit<Resource, 'id'>) => {
+  const updateExistingResource = async (resource: Resource) => {
     try {
-      const updatedResource = await updateResource(id, resource);
+      const updatedResource = await updateResource(resource);
       setResources((prevResources) =>
-        prevResources.map((r) => (r.id === id ? updatedResource : r))
+        prevResources.map((resource) =>
+          resource.id === updatedResource.id ? updatedResource : resource
+        )
       );
       return updatedResource;
     } catch (error) {

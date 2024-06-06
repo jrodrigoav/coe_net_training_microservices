@@ -76,7 +76,7 @@ const ResourceComponent: React.FC = () => {
 
   const submitResourceModal = async () => {
     if (resourceForm.id) {
-      await updateResource(resourceForm.id, resourceForm);
+      await updateResource(resourceForm);
     } else {
       await createResource(resourceForm);
     }
@@ -100,9 +100,14 @@ const ResourceComponent: React.FC = () => {
 
   const onUpdate = (resource: Resource) => {
     setModalTitle("Update Resource");
-    setResourceForm(resource);
+    setResourceForm({ ...resource });
+    setResourceForm(prevState => ({
+      ...prevState,
+      dateOfPublication: new Date(resource.dateOfPublication)
+    }));
     setModalVisible(true);
   };
+  
 
   return (
     <div className="main-content">
@@ -120,7 +125,9 @@ const ResourceComponent: React.FC = () => {
           <Table dataSource={filteredResources} rowKey="id" className="mt-4">
             <Table.Column title="ID" dataIndex="id" key="id" />
             <Table.Column title="Name" dataIndex="name" key="name" />
-            <Table.Column title="Description" dataIndex="description" key="description" />
+            <Table.Column title="Author" dataIndex="author" key="author" />
+            <Table.Column title="Type" dataIndex="type" key="type" />
+            <Table.Column title="Date Of Publication" dataIndex="dateOfPublication" key="dateOfPublication" />
             <Table.Column
               title="Actions"
               key="actions"

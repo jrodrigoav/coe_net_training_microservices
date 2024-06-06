@@ -41,14 +41,14 @@ export const createResource = async (resource: Omit<Resource, 'id'>): Promise<Re
 };
 
 // Update an existing resource
-export const updateResource = async (id: string, resource: Omit<Resource, 'id'>): Promise<Resource> => {
+export const updateResource = async (resource: Resource): Promise<Resource> => {
     try {
-        const response = await fetch(`${apiConfig.api.resourceApi}/${id}`, {
+        const response = await fetch(`${apiConfig.api.resourceApi}/update`, {
             method: 'PUT',
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ id, ...resource })
+            body: JSON.stringify(resource)
         });
 
         if (response.ok) {
