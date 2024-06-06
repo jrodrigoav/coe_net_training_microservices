@@ -4,7 +4,7 @@ import { Resource } from '../interfaces/Resource';
 // Fetch the list of resources
 export const getResourceList = async (): Promise<Resource[]> => {
     try {
-        const response = await fetch(apiConfig.api.resourceApi);
+        const response = await fetch(`${apiConfig.api.resourceApi}/list`);
         if (response.ok) {
             return await response.json();
         } else {
@@ -20,7 +20,7 @@ export const getResourceList = async (): Promise<Resource[]> => {
 // Create a new resource
 export const createResource = async (resource: Omit<Resource, 'id'>): Promise<Resource> => {
     try {
-        const response = await fetch(apiConfig.api.resourceApi, {
+        const response = await fetch(`${apiConfig.api.resourceApi}/create`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",

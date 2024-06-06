@@ -43,12 +43,12 @@ export const createClient = async (client: Omit<Client, 'id'>): Promise<Client> 
 // Update an existing client
 export const updateClient = async (id: string, client: Omit<Client, 'id'>): Promise<Client> => {
     try {
-        const response = await fetch(`${apiConfig.api.clientApi}/${id}`, {
+        const response = await fetch(`${apiConfig.api.clientApi}`, {
             method: 'PUT',
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(client)
+            body: JSON.stringify({ id, ...client })
         });
 
         if (response.ok) {

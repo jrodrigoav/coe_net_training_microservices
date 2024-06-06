@@ -25,9 +25,6 @@ const ClientComponent: React.FC = () => {
   const [isRentingModalVisible, setIsRentingModalVisible] = useState<boolean>(false);
   const [isReturnModalVisible, setIsReturnModalVisible] = useState<boolean>(false);
 
-  useEffect(() => {
-    getClients();
-  }, [getClients]);
 
   useEffect(() => {
     setFilteredClients(clients.filter(client => client.firstName.toLowerCase().includes(searchString.toLowerCase())));
@@ -135,7 +132,7 @@ const ClientComponent: React.FC = () => {
 
       <Modal
         title={modalTitle}
-        visible={modalVisible}
+        open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={[
           <Button key="cancel" onClick={() => setModalVisible(false)}>Cancel</Button>,
@@ -169,7 +166,7 @@ const ClientComponent: React.FC = () => {
 
       <Modal
         title="Register Renting"
-        visible={isRentingModalVisible}
+        open={isRentingModalVisible}
         onCancel={() => setIsRentingModalVisible(false)}
         footer={[
           <Button key="cancel" onClick={() => setIsRentingModalVisible(false)}>Cancel</Button>,
@@ -200,7 +197,7 @@ const ClientComponent: React.FC = () => {
 
       <Modal
         title="Return"
-        visible={isReturnModalVisible}
+        open={isReturnModalVisible}
         onCancel={() => setIsReturnModalVisible(false)}
         footer={[
           <Button key="cancel" onClick={() => setIsReturnModalVisible(false)}>Cancel</Button>,
