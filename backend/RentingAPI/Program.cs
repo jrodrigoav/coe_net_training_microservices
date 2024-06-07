@@ -15,12 +15,13 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.Configure<ClientsAPISettings>(builder.Configuration.GetSection(nameof(ClientsAPISettings)));
     builder.Services.Configure<InventoryAPISettings>(builder.Configuration.GetSection(nameof(InventoryAPISettings)));
-    builder.Services.Configure<ResourcesAPISettings>(builder.Configuration.GetSection(nameof(ResourcesAPISettings)));
+    builder.Services.Configure<ResourcesAPISettings>(builder.Configuration.GetSection(nameof(InventoryAPISettings)));
 
     builder.Services.AddHttpClient<ClientAPIClient>();
     builder.Services.AddHttpClient<InventoryAPIClient>();
     builder.Services.AddHttpClient<ResourcesAPISettings>();
     builder.Services.AddScoped<InventoryAPIClient>();
+    builder.Services.AddScoped<ResourcesAPIClient>();
 
     builder.Services.AddDbContext<RentingDbContext>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("MicroservicesDB")));
 
@@ -32,6 +33,11 @@ var builder = WebApplication.CreateBuilder(args);
             {
                 policy.AllowAnyMethod();
                 policy.AllowAnyHeader();
+                policy.WithOrigins("http://localhost:4200");
+            });
+    });
+
+    AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
                 policy.WithOrigins("http://localhost:4200", "http://localhost:5173");
             });
     });

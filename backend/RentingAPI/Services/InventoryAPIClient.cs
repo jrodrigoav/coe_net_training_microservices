@@ -15,13 +15,10 @@ namespace RentingAPI.Services
 
         public async Task<ItemResponse[]> ListResourceAvailabilityAsync(Guid resourceId)
         {
-           //var baseUrl = "http://localhost:5183/api/resources";//not sure this is the correct url What is the business rule?
-            var items = await _client.GetFromJsonAsync<ResourceResponse[]>($"{_client.BaseAddress}/{resourceId}");
+            var item = await _client.GetFromJsonAsync<ResourceResponse>($"{_client.BaseAddress}/{resourceId}");
             List<ItemResponse> r =new List<ItemResponse>();
-            foreach (var item in items)
-            {
-                r.Add(new ItemResponse() { Id = item.Id, Available = true });
-            }
+            ItemResponse itemResponse =  new ItemResponse { Available = true ,ResourceId=item.Id,Id=item.Id,Name=item.Name};
+            r.Add(itemResponse);
             return r.ToArray() ?? Array.Empty<ItemResponse>();
         }
 

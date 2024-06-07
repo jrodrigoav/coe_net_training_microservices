@@ -166,7 +166,7 @@
                                                 <td>{{row.registrationDate | date}}</td>
                                                 <td>
                                                     <button type="button" data-bs-toggle="modal"
-                                                        data-bs-target="#dateModal" (click)="onReturnDate(row.id)"
+                                                        data-bs-target="#dateModal" (click)="onReturnDate(row.id,date)"
                                                         data-bs-backdrop="false" class="btn btn-info"
                                                         data-bs-dismiss="modal">
                                                         Return <i class="bi bi-arrow-counterclockwise"></i>
@@ -206,7 +206,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" (click)="returnResource()" data-bs-dismiss="modal" [disabled]="!date">Ok</button>
+                    <button type="button" class="btn btn-primary" (click)="returnSpecificResource()" data-bs-dismiss="modal" [disabled]="!date">Ok</button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>

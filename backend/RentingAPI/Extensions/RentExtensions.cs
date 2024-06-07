@@ -10,10 +10,12 @@ namespace RentingAPI.Extensions
             {
                 Id = rent.Id,
                 ClientId = rent.ClientId,
-                RegistrationDate = rent.RegistrationDate,
+                RegistrationDate = (DateTime)rent.RegistrationDate,
                 ResourceId = rent.ResourceId,
-                ReturnDate = rent.ReturnDate,
-                CopyId = rent.CopyId
+                ReturnDate = (DateTime)rent.ReturnDate,
+                CopyId = rent.CopyId,
+                ResourceName=rent.Name
+                
             };
         }
     }

@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RentingAPI.Services.Data;
 using ResourcesAPI.Extensions;
 using ResourcesAPI.Models;
 using ResourcesAPI.Models.Data;
 using ResourcesAPI.Services.Data;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 
 namespace ResourcesAPI.Controllers
@@ -24,8 +27,11 @@ namespace ResourcesAPI.Controllers
         {
             var r = await resourcesDbContext.Resources.FindAsync(resourceId);
             if (r == null) return NotFound();
-            return Ok(r.ToResourceResponse());
+            var data = r.ToResourceResponse();
+          //  Debug.WriteLine("Data ",data.ToString());
+            return Ok(data);
         }
+
 
         [HttpPost("create"), HttpOptions]
         public async Task<ActionResult<ResourceResponse>> Create(CreateResourceRequest createResourceRequest)
@@ -36,6 +42,8 @@ namespace ResourcesAPI.Controllers
             return CreatedAtAction(nameof(GetResourceById), new { resourceId = entity.Entity.Id }, entity.Entity.ToResourceResponse());
         }
 
+        //        [HttpPut, HttpOptions]
+       // [HttpPost("update"), HttpOptions]
         [HttpPut("update"), HttpOptions]
         public async Task<ActionResult<ResourceResponse>> Update(UpdateResourceRequest updateResourceRequest)
         {
