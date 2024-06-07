@@ -4,6 +4,7 @@ import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useInventoryContext } from '../contexts/InventoryContext';
 import { useResourceContext } from '../contexts/ResourceContext';
 import { Resource } from '../interfaces/Resource';
+import { omit } from 'lodash';
 
 const ResourceComponent: React.FC = () => {
   const { resources, getResourceList, createResource, updateResource, deleteResource } = useResourceContext();
@@ -78,11 +79,12 @@ const ResourceComponent: React.FC = () => {
     if (resourceForm.id) {
       await updateResource(resourceForm);
     } else {
-      await createResource(resourceForm);
+      const resourceData = omit(resourceForm, 'id');
+      await createResource(resourceData);
     }
     fetchData();
     setModalVisible(false);
-  };
+  }
 
   const onNew = () => {
     setModalTitle("New Resource");
