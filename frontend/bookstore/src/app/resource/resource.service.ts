@@ -23,7 +23,7 @@ export class ResourceService {
   }
 
   update(id: string, resource: Omit<Resource, 'id'>) {
-    return this.httpClient.post<Resource>(`${this.baseUrl}/update`, { id, ...resource });
+    return this.httpClient.put<Resource>(`${this.baseUrl}/update`, { id, ...resource });
   }
 
   delete(id: string) {
