@@ -22,6 +22,7 @@ var builder = WebApplication.CreateBuilder(args);
                 policy.AllowAnyHeader();
                 policy.AllowAnyOrigin();
                 policy.DisallowCredentials();
+
                 policy.WithOrigins("https://localhost:7122", 
                                     "https://localhost:4200",
                                     "http://localhost:4200", 

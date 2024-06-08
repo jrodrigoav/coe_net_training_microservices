@@ -29,6 +29,7 @@ var builder = WebApplication.CreateBuilder(args);
             {
                 policy.AllowAnyMethod();
                 policy.AllowAnyHeader();
+
                 policy.WithOrigins("http://localhost:4200", "http://localhost:5181", "http://localhost:5173", "http://localhost:5183");
             });
     });
