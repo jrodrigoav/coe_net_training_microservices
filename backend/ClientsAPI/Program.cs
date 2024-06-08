@@ -22,7 +22,14 @@ var builder = WebApplication.CreateBuilder(args);
                 policy.AllowAnyHeader();
                 policy.AllowAnyOrigin();
                 policy.DisallowCredentials();
-                policy.WithOrigins("https://localhost:7122", "https://localhost:4200", "http://localhost:4200", "https://localhost:5183", "http://localhost:5183");
+
+                policy.WithOrigins("https://localhost:7122", 
+                                    "https://localhost:4200",
+                                    "http://localhost:4200", 
+                                    "https://localhost:5183", 
+                                    "http://localhost:5183", 
+                                    "http://localhost:5180",
+                                    "http://localhost:5173");
             });
     });
 }

@@ -1,0 +1,8 @@
+{
+    "api": {
+      "resourceApi": "http://localhost:5183/api/resources",
+      "inventoryApi": "http://localhost:5181/api/inventory",
+      "clientApi": "http://localhost:5180/api/clients",
+      "rentingApi": "http://localhost:5182/api/renting"
+    }
+}

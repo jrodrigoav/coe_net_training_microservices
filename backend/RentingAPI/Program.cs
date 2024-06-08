@@ -33,12 +33,14 @@ var builder = WebApplication.CreateBuilder(args);
             {
                 policy.AllowAnyMethod();
                 policy.AllowAnyHeader();
-                policy.WithOrigins("http://localhost:4200");
+                policy.WithOrigins("http://localhost:4200", "http://localhost:5173");
             });
     });
 
     AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+    
 }
+
 var app = builder.Build();
 {
     app.UseCors(DEFAULT_CORS_POLICY);
