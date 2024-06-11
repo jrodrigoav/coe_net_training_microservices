@@ -134,6 +134,7 @@ namespace RentingAPI.Controllers
         //        rent.Returned = true;
         //        await rentingDbContext.SaveChangesAsync();
 
+
         //        // Set copy availability to true in the inventory
         //        var updateItemRequest = new UpdateItemRequest
         //        {

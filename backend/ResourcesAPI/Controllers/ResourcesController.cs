@@ -42,6 +42,7 @@ namespace ResourcesAPI.Controllers
             return CreatedAtAction(nameof(GetResourceById), new { resourceId = entity.Entity.Id }, entity.Entity.ToResourceResponse());
         }
 
+
         [HttpPut("update"), HttpOptions]
         public async Task<ActionResult<ResourceResponse>> Update(UpdateResourceRequest updateResourceRequest)
         {
