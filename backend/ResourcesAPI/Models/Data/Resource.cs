@@ -24,8 +24,5 @@ namespace ResourcesAPI.Models.Data
 
         [StringLength(500)]
         public string Description { get; set; } = null!;
-
-        public int RentedItems { get; set; } = 0;   
-        public int TotalItems { get; set; }=0;
     }
 }
