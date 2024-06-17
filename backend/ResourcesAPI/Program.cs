@@ -1,9 +1,5 @@
-using InventoryAPI.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RentingAPI.Models;
-using RentingAPI.Services;
-using RentingAPI.Services.Data;
 using ResourcesAPI.Services.Data;
 
 const string DEFAULT_CORS_POLICY = "AllowLocalhostCORSPolicy";
@@ -31,7 +27,10 @@ var builder = WebApplication.CreateBuilder(args);
             {
                 policy.AllowAnyMethod();
                 policy.AllowAnyHeader();
-                policy.WithOrigins( "http://localhost:4200", "http://localhost:5183", "http://localhost:5173");
+                policy.WithOrigins( "http://localhost:4200", 
+                                    "http://localhost:5183", 
+                                    "http://localhost:5173",
+                                    "http://localhost:5181");
             });
     });
 }

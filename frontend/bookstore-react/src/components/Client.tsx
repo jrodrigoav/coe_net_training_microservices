@@ -12,7 +12,6 @@ const ClientComponent: React.FC = () => {
   const { clients, getClients, createClient, updateClient } = useClientContext();
   const { resources } = useResourceContext();
   const { registerRenting, returnRentingResource, listRentingsByClientId } = useRentingContext();
-
   const [searchString, setSearchString] = useState<string>('');
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
   const [clientForm, setClientForm] = useState<Client>({ id: '', firstName: '', lastName: '', email: '' });
@@ -24,11 +23,13 @@ const ClientComponent: React.FC = () => {
   const [returnDate, setReturnDate] = useState<string>('');
   const [isRentingModalVisible, setIsRentingModalVisible] = useState<boolean>(false);
   const [isReturnModalVisible, setIsReturnModalVisible] = useState<boolean>(false);
-
+  const [isReturnDateModalVisible, setIsReturnDateModalVisible] = useState<boolean>(false);
+  const [selectedRenting, setSelectedRenting] = useState<ClientRenting | null>(null);
 
   useEffect(() => {
     setFilteredClients(clients.filter(client => client.firstName.toLowerCase().includes(searchString.toLowerCase())));
   }, [clients, searchString]);
+
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchString(e.target.value);
@@ -80,18 +81,25 @@ const ClientComponent: React.FC = () => {
     }
   };
 
-  const onReturn = async (id: string) => {
+  const showReturnModal = async (id: string) => {
     setClientId(id);
     const rentings = await listRentingsByClientId(id);
     setRentingList(rentings);
     setIsReturnModalVisible(true);
   };
 
+  const openReturnDateModal = (record: ClientRenting) => {
+    setSelectedRenting(record);
+    setIsReturnModalVisible(false);
+    setIsReturnDateModalVisible(true);
+  };
+
   const handleReturnResource = async () => {
-    if (clientId && returnDate) {
-      await returnRentingResource(clientId, returnDate);
-      setReturnDate('');
-      setIsReturnModalVisible(false);
+    if (selectedRenting && returnDate) {
+      await returnRentingResource(selectedRenting.id, returnDate);
+      const updatedRentingList = await listRentingsByClientId(clientId);
+      setRentingList(updatedRentingList);
+      setIsReturnDateModalVisible(false);
     }
   };
 
@@ -122,7 +130,7 @@ const ClientComponent: React.FC = () => {
               <Button icon={<PlusOutlined />} onClick={() => onRenting(record.id)}>
                 Renting
               </Button>
-              <Button icon={<DeleteOutlined />} onClick={() => onReturn(record.id)}>
+              <Button icon={<DeleteOutlined />} onClick={() => showReturnModal(record.id)}>
                 Return
               </Button>
             </div>
@@ -201,7 +209,6 @@ const ClientComponent: React.FC = () => {
         onCancel={() => setIsReturnModalVisible(false)}
         footer={[
           <Button key="cancel" onClick={() => setIsReturnModalVisible(false)}>Cancel</Button>,
-          <Button key="submit" type="primary" onClick={handleReturnResource}>Ok</Button>,
         ]}
       >
         <Table dataSource={rentingList} rowKey="id">
@@ -211,12 +218,23 @@ const ClientComponent: React.FC = () => {
             title="Return"
             key="return"
             render={(record: ClientRenting) => (
-              <Button type="link" onClick={() => setClientId(record.id)}>
+              <Button type="link" onClick={() => openReturnDateModal(record)}>
                 Return
               </Button>
             )}
           />
         </Table>
+      </Modal>
+      
+      <Modal
+        title="Select Return Date"
+        open={isReturnDateModalVisible}
+        onCancel={() => setIsReturnDateModalVisible(false)}
+        footer={[
+          <Button key="cancel" onClick={() => setIsReturnDateModalVisible(false)}>Cancel</Button>,
+          <Button key="submit" type="primary" onClick={handleReturnResource}>Ok</Button>,
+        ]}
+      >
         <Form layout="vertical">
           <Form.Item label="Return Date">
             <Input
