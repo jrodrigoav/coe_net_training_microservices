@@ -6,7 +6,7 @@ import { Renting } from '../interfaces/Renting';
 // Fetch the list of renting records by client ID
 export const listRentingsByClientId = async (id: string): Promise<ClientRenting[]> => {
     try {
-        const response = await fetch(`${apiConfig.api.rentingApi}/client/${id}`);
+        const response = await fetch(`${apiConfig.api.rentingApi}/rented/${id}`);
         if (response.ok) {
             return await response.json();
         } else {
