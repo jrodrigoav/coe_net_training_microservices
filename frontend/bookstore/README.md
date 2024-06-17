@@ -25,3 +25,23 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+
+##Database setup
+You need docker destop https://www.docker.com/products/docker-desktop/
+Once installed you need to setup the image with the postgres database and the pgadmin utility to be able to run queries
+//TODO  add instructions for the image location and loading
+
+once the image is running you can log into the database using pgadmin with the user and password added into the image at build time
+
+then you need to recreate the database schema using the initial.sql from each project, located under the MigrationScripts folder on each project.
+
+##Setup Secrets for each project
+on each project you need to right click -> Manage User Secrets which will open a json file that needs to be filled with the following values
+from the DB docker image
+{
+  "ConnectionStrings": {
+    "MicroservicesDB": "User ID=xxxxx;Password=xxxxx;Host=localhost;Port=5432;Database=postgres;Pooling=true;Connection Lifetime=0;"
+  }
+}
+
