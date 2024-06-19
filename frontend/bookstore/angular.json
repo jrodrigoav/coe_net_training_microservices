@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "bookstore": {
+    "Frontend": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/bookstore",
+            "outputPath": "dist/frontend",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -25,9 +25,15 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/@popperjs/core/dist/umd/popper.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -57,10 +63,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "bookstore:build:production"
+              "buildTarget": "Frontend:build:production"
             },
             "development": {
-              "buildTarget": "bookstore:build:development"
+              "buildTarget": "Frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -68,14 +74,12 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "bookstore:build"
+            "buildTarget": "Frontend:build"
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",          
+          "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "watch": false,
-            "browsers": "ChromeHeadless",
             "polyfills": [
               "zone.js",
               "zone.js/testing"
@@ -95,6 +99,6 @@
     }
   },
   "cli": {
-    "analytics": "ac0e2d96-3834-48be-b55f-f1f17d353058"
+    "analytics": "da777ebe-f21c-421f-919b-a8f1e2101a6d"
   }
 }

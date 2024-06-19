@@ -1,7 +1,3 @@
-docker-compose.remote.yaml
-create-everything.sh
-delete-everything.sh
-eniconfig-template.yaml
 bin/
 obj/
 node-modules/
@@ -9,3 +5,7 @@ node-modules/
 .vs/
 .angular/
 package-lock.json
+.env.*
+.terragrunt-cache/
+.terraform.lock.hcl
+

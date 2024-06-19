@@ -1,0 +1,48 @@
+    "AttachedPolicies": [
+        {
+            "PolicyName": "AmazonSSMManagedInstanceCore",
+            "PolicyArn": "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+        },
+        {
+            "PolicyName": "AmazonEKS_CNI_Policy",
+            "PolicyArn": "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+        },
+        {
+            "PolicyName": "AmazonEC2ContainerRegistryReadOnly",
+            "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+        },
+        {
+            "PolicyName": "AmazonEKSWorkerNodePolicy",
+            "PolicyArn": "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+        }
+    ]
+# eksctl-jrav20240426-nodegroup-ng-1-workers-PolicyAutoScaling
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "autoscaling:DescribeAutoScalingGroups",
+                "autoscaling:DescribeAutoScalingInstances",
+                "autoscaling:DescribeLaunchConfigurations",
+                "autoscaling:DescribeScalingActivities",
+                "autoscaling:DescribeTags",
+                "ec2:DescribeInstanceTypes",
+                "ec2:DescribeLaunchTemplateVersions"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "autoscaling:SetDesiredCapacity",
+                "autoscaling:TerminateInstanceInAutoScalingGroup",
+                "ec2:DescribeImages",
+                "ec2:GetInstanceTypesFromInstanceRequirements",
+                "eks:DescribeNodegroup"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        }
+    ]
+}

@@ -1,0 +1,58 @@
+kind: ClusterConfig
+apiVersion: eksctl.io/v1alpha5
+metadata:
+   name: jrav20240426
+   region: us-east-1
+   version: '1.29'
+   tags: {
+     Account: acloudguru,
+     Environment: sandbox,
+     CreatedBy: jesus.acedo@unosquare.com
+   }
+   annotations: {
+     Account: acloudguru,
+     Environment: sandbox,
+     CreatedBy: jesus.acedo@unosquare.com
+   }
+vpc:
+  id: vpc-0cad6c6ed0a60f40b
+  subnets:
+    private:
+      us-east-1a:
+          id: subnet-0489b5a8d7430b4bb
+      us-east-1b:
+          id: subnet-02c14f684d59c59bc
+      us-east-1c:
+          id: subnet-056b80a231d41d8db
+    public:
+      us-east-1a:
+          id: subnet-02c055bf7cb6d893e
+      us-east-1b:
+          id: subnet-0bc6f332e7b148245
+      us-east-1c:
+          id: subnet-060b78f02553389f2
+  clusterEndpoints:
+    publicAccess: true
+    privateAccess: false
+  publicAccessCIDRs: ["189.203.100.8/32"]
+managedNodeGroups:
+  - name: ng-1-workers
+    labels:
+       role: workers       
+    instanceType: t3.medium
+    minSize: 0
+    maxSize: 5
+    desiredCapacity: 0    
+    privateNetworking: true
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+    propagateASGTags: true
+cloudWatch:
+   clusterLogging:
+      enableTypes: ["audit", "authenticator", "controllerManager"]
+      # all supported types: "api", "audit", "authenticator", "controllerManager", "scheduler"
+secretsEncryption:
+  keyARN: arn:aws:kms:us-east-1:654654504276:key/fe7bceca-4c71-4878-affd-e7e2144a68d9
+iam:
+   withOIDC:
