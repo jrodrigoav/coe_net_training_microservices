@@ -1,4 +1,4 @@
-export interface Resource {
+export class Resource { 
     id: string;
     name: string;
     dateOfPublication: Date;
@@ -6,4 +6,14 @@ export interface Resource {
     tags: string[];
     type: string;
     description: string;
+
+    constructor(){
+        this.id="";
+        this.name="";
+        this.author="";
+        this.tags=[];
+        this.type="";
+        this.description="";
+        this.dateOfPublication=new Date();
+    }
 }

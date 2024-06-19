@@ -10,5 +10,8 @@ namespace ClientsAPI.Models
         [StringLength(150)]
         public string LastName { get; init; } = null!;
 
+        [StringLength(150)]
+        public string Email { get; init; } = null!;
+
     }
 }

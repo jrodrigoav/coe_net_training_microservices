@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 
 namespace ResourcesAPI.Models
 {
     public abstract class ResourceDTO
     {
+        public Guid Id { get; init; }
+
         [Required, StringLength(254)]
         public string Name { get; init; } = null!;
 

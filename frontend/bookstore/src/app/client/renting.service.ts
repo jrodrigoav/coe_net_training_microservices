@@ -9,20 +9,29 @@ import { ConfigService } from '../services/config.service';
 })
 export class RentingService {
   private readonly baseUrl: string;
+  private readonly resourceApiUrl: string;
+  private readonly rentingApiUrl: string;
+
 
   constructor(private httpClient: HttpClient, configService: ConfigService) {
     this.baseUrl = configService.api.rentingApi;
+    this.resourceApiUrl = configService.api.resourceApi;
+    this.rentingApiUrl = configService.api.rentingApi;
   }
 
-  listByClientId(id: string) {
-    return this.httpClient.get<ClientRenting[]>(this.baseUrl + `client/${id}`);
+  listByClientId(clientId: string) {
+    return this.httpClient.get<ClientRenting[]>(`${this.rentingApiUrl}/rented/${clientId}`);//TODO check if this is correct
   }
 
   register(data: Renting) {
-    return this.httpClient.post<Omit<Renting, 'id'>>(this.baseUrl + 'register/', data);
+    return this.httpClient.post<Omit<Renting, 'id'>>(`${this.baseUrl}/register`, data);
   }
 
-  returnResource(id: string, returnDate: Date | string) {
-    return this.httpClient.put(this.baseUrl + `return/${id}`, { returnDate });
+  returnSpecificResource(resourceId: string, returnDate: Date | undefined) {
+    return this.httpClient.put(`${this.rentingApiUrl}/return/${resourceId}`, { returnDate });
+  }
+
+  returnResource(resourceId: string, returnDate: Date | string) {
+    return this.httpClient.put(`${this.rentingApiUrl}/returnoeuoeu/${resourceId}`, { returnDate });
   }
 }

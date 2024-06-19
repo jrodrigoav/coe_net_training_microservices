@@ -58,6 +58,7 @@ namespace ClientsAPI.Controllers
             if (client == null) return NotFound();
             client.FirstName = updateClientRequest.FirstName;
             client.LastName = updateClientRequest.LastName;
+            client.Email = updateClientRequest.Email;
             await clientsDbContext.SaveChangesAsync();
             return Ok(client.ToClientResponse());
         }
