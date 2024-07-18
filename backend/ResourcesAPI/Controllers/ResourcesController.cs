@@ -28,7 +28,6 @@ namespace ResourcesAPI.Controllers
             var r = await resourcesDbContext.Resources.FindAsync(resourceId);
             if (r == null) return NotFound();
             var data = r.ToResourceResponse();
-          //  Debug.WriteLine("Data ",data.ToString());
             return Ok(data);
         }
 
