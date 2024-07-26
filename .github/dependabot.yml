@@ -1,0 +1,41 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/backend/ClientsApi" 
+    schedule:
+      interval: "daily" 
+    open-pull-requests-limit: 5 
+    commit-message:
+      prefix: "clients-deps" 
+
+  - package-ecosystem: "nuget"
+    directory: "/backend/InventoryAPI" 
+    schedule:
+      interval: "daily" 
+    open-pull-requests-limit: 5 
+    commit-message:
+      prefix: "inventory-deps" 
+
+  - package-ecosystem: "nuget"
+    directory: "/backend/RentingAPI" 
+    schedule:
+      interval: "daily" 
+    open-pull-requests-limit: 5 
+    commit-message:
+      prefix: "renting-deps" 
+
+  - package-ecosystem: "nuget"
+    directory: "/backend/ResourceAPI" 
+    schedule:
+      interval: "daily" 
+    open-pull-requests-limit: 5 
+    commit-message:
+      prefix: "resource-deps" 
+
+  - package-ecosystem: "nuget"
+    directory: "/backend" 
+    schedule:
+      interval: "daily" 
+    open-pull-requests-limit: 5 
+    commit-message:
+      prefix: "deps" 
