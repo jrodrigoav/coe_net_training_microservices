@@ -39,3 +39,11 @@ updates:
     open-pull-requests-limit: 5 
     commit-message:
       prefix: "deps" 
+
+  - package-ecosystem: "npm"
+    directory: "/frontend/bookstore-react" 
+    schedule:
+      interval: "daily" 
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "bookstore-react-deps"
