@@ -32,6 +32,8 @@
     - Go to the "coe_net_training_microservices" folder
     - Open new command line and Run the following command : 
         - docker compose -f .\docker-compose.yaml --project-name microsvcs up --detach  
+
+![dockerrunning](_docs/readme/docker.png)
         
 ### 5. Login into the database using pgadmin 
     4.1. URL
@@ -39,7 +41,23 @@
     4.2. Credentials 
          Search in the docker-compose.yaml file
 
-### 6. Data Bases Schema Setup  
+### 6. Connect local server to pgadmin
+In case your servers section is empty, follow the next steps to attatch the localhost to pgadmin.
+
+    - Right click in Servers section
+    - Select Register and then Server...
+
+![pgadmin](_docs/readme/pgadmin.png)
+
+    - In the first tap (general) put a name for the server
+    - In the second tap (connection), put the following information:
+      - Host name/address: host.docker.internal
+      - Username: postgres
+      - Password: *in the compose file*
+
+![alt text](_docs/readme/registerserver.png)
+
+### 7. Data Bases Schema Setup  
     - Open a new command line 
     - Go to coe_net_training_microservices\backend folder 
     - Open coe_net_microservices.sln solution (Visual Studio)
@@ -50,7 +68,7 @@
        
     Note: Execute the file in the pgAdmin from the previous step 
 
-## 7. Setup Secrets for each project
+## 8. Setup Secrets for each project
     - On each project you need to right click 
     - Manage User Secrets 
     - Paste the following values in the json file 
@@ -59,11 +77,13 @@
             "MicroservicesDB": "User ID=xxxxx;Password=xxxxx;Host=localhost;Port=5432;Database=postgres;Pooling=true;Connection Lifetime=0;"
           }
         }
+
+![alt text](_docs/readme/usersecrets.gif)
     
-## 7. Setup appsettings.Development file for each project
+## 9. Setup appsettings.Development file for each project
     - Go to the appsettings.Development.json file of each project
     
-#### 7.1 ClientAPI 
+#### 9.1 ClientAPI 
        {
           "Logging": {
             "LogLevel": {
@@ -72,7 +92,7 @@
             }
           },
         }
-#### 7.2 InventoryAPI
+#### 9.2 InventoryAPI
         {
           "Logging": {
             "LogLevel": {
@@ -84,7 +104,7 @@
             "Url": "http://localhost:5183/api/resources"
           }
         }
-#### 7.3 RentingAPI
+#### 9.3 RentingAPI
         {
           "Logging": {
             "LogLevel": {
@@ -93,7 +113,7 @@
             }
           },
         }
-#### 7.4 ResourceAPI 
+#### 9.4 ResourceAPI 
         {
           "Logging": {
             "LogLevel": {
@@ -103,7 +123,7 @@
           },
         }
         
-## 8. Configure Startup Projects 
+## 10. Configure Startup Projects 
 
     Right click on the project and then select following projects
     -- ClientAPI
@@ -113,7 +133,15 @@
 
 Now please build the project and launch it, do not forget to also launch the docker image of the db server.
 
-## 8. Connectivity Test 
+You can configure Visual Studio to execute all the projects as startup:
+
+  - Right click in the solution
+  - Click in properties
+  - Select all the api projects
+
+![alt text](_docs/readme/startupproject.gif)
+
+## 10. Connectivity Test 
     - Execute the endPoint : http://localhost:5183/api/resources/list (GET)
       you should see no errors
 
