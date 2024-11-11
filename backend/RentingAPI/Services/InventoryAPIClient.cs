@@ -26,13 +26,16 @@ namespace RentingAPI.Services
 
             await foreach (var item in _client.GetFromJsonAsAsyncEnumerable<ItemResponse>($"{_client.BaseAddress}/list/{resourceId}") ?? AsyncEnumerable.Empty<ItemResponse>())
             {
-                availableItems.Add(new ItemResponse
+                if (item != null)
                 {
-                    Id = item.Id,
-                    Available = true,
-                    ResourceId = resource.Id,
-                    Name = resource.Name
-                });
+                    availableItems.Add(new ItemResponse
+                    {
+                        Id = item.Id,
+                        Available = true,
+                        ResourceId = resource.Id,
+                        Name = resource.Name
+                    });
+                }
             }
 
             return availableItems.ToArray();
