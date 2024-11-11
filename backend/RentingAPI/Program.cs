@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.Configure<ClientsAPISettings>(builder.Configuration.GetSection(nameof(ClientsAPISettings)));
     builder.Services.Configure<InventoryAPISettings>(builder.Configuration.GetSection(nameof(InventoryAPISettings)));
-    builder.Services.Configure<ResourcesAPISettings>(builder.Configuration.GetSection(nameof(InventoryAPISettings)));
+    builder.Services.Configure<ResourcesAPISettings>(builder.Configuration.GetSection(nameof(ResourcesAPISettings)));
 
     builder.Services.AddHttpClient<ClientAPIClient>();
     builder.Services.AddHttpClient<InventoryAPIClient>();
@@ -38,7 +38,7 @@ var builder = WebApplication.CreateBuilder(args);
     });
 
     AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-    
+
 }
 
 var app = builder.Build();
@@ -49,7 +49,7 @@ var app = builder.Build();
         app.UseSwagger();
         app.UseSwaggerUI();
     }
-   
+
     app.MapGet("/", () => "RentingAPI");
     app.MapGet("/lbhealth", () => "RentingAPI");
     app.MapControllers();
