@@ -161,3 +161,7 @@ That should give no errors and lauch a server with the UI, which you should be a
         npm run dev (run project)
 
 That should give no errors and lauch a server with the UI, which you should be able to access using this url http://localhost:5173/
+
+## 11. To do
+      - Return: It is not working properly. The backend returns a successful response upon returning a resoruce, but the resource is not actually returned.
+      - Renting: The backend does not return an error when a user attempts to rent unavailable resources and incorrectly lists unavailable resources as available for rent.
