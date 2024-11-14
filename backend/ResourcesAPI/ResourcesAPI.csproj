@@ -16,9 +16,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\InventoryAPI\InventoryAPI.csproj" />
-    <ProjectReference Include="..\RentingAPI\RentingAPI.csproj" />
-  </ItemGroup>
-
 </Project>

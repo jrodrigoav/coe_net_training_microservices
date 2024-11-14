@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RentingAPI.Services.Data;
 using ResourcesAPI.Extensions;
 using ResourcesAPI.Models;
 using ResourcesAPI.Models.Data;
