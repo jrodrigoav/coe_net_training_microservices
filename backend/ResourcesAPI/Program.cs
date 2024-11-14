@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using RentingAPI.Models;
 using ResourcesAPI.Services.Data;
 
 const string DEFAULT_CORS_POLICY = "AllowLocalhostCORSPolicy";
@@ -15,7 +14,6 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddDbContext<ResourcesDbContext>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("MicroservicesDB")));
     //builder.Services.AddDbContext<RentingDbContext>(optionsAction => optionsAction.UseNpgsql(builder.Configuration.GetConnectionString("MicroservicesDB")));
-    builder.Services.Configure<InventoryAPISettings>(builder.Configuration.GetSection(nameof(InventoryAPISettings)));
 
     //builder.Services.AddScoped<RentingDbContext>();
 
